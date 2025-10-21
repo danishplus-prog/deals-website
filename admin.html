@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Admin Panel - Special Offers</title>
+    <!-- Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Quill.js CSS for Rich Text Editor -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@1.3.6/dist/quill.snow.css" rel="stylesheet">
+    <style>
+        /* === Design System - UPDATED COLOR SCHEME & 3D LOOK === */
+        :root {
+            /* COLOR UPDATE: New Teal/Cyan/Blue Accent */
+            --primary-bg: #0F0F0F; 
+            --secondary-bg: #1B1B1B; 
+            --card-bg: #282828; /* Slightly lighter card BG for contrast/lift */
+            --text-primary: #F1F5F9; 
+            --text-secondary: #94A3B8; 
+            --accent-color: #00BCD4; /* New: Teal/Cyan */
+            --accent-gradient: linear-gradient(135deg, #00BCD4 0%, #4DD0E1 100%); /* New: Lighter Teal/Cyan */
+            --primary-button-bg: #3498db; /* New: Vibrant Blue */
+            --border-color: #374151; 
+            --success-color: #10B981;
+            --danger-color: #EF4444; 
+            --border-radius: 10px; 
+            --sidebar-width: 260px;
+            
+            /* --- 3D SHADOWS ADDITION --- */
+            --card-shadow-lift: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.25); /* Stronger Lift for Cards/Header */
+            --button-shadow-base: inset 0 -4px 0 rgba(0, 0, 0, 0.4), 0 5px 10px rgba(0, 0, 0, 0.5); /* Raised Button Look */
+            --button-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.6), inset 0 -1px 0 rgba(255, 255, 255, 0.1); /* Pressed Button Look */
+            --input-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* Inset Look for Inputs */
+            --sidebar-shadow: 4px 0 15px rgba(0,0,0,0.5);
+        }
+
+        /* === Base & Layout === */
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            background-color: var(--primary-bg); 
+            color: var(--text-primary); 
+            line-height: 1.6; 
+            overflow-x: hidden;
+        }
+        
+        /* === Login Page - IMPROVED 3D LOOK === */
+        #login-page { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            background: linear-gradient(45deg, var(--primary-bg) 0%, #1a2a3a 100%);
+        }
+        #login-form-container { 
+            background-color: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            max-width: 360px; /* Slightly wider */
+            width: 90%; 
+            padding: 2.5rem; 
+            border-radius: var(--border-radius); 
+            text-align: center; 
+            box-shadow: var(--card-shadow-lift); /* 3D Lift */
+            transform: scale(1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        #login-form-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6), 0 8px 10px rgba(0, 0, 0, 0.4);
+        }
+        #login-form-container h1 { 
+            margin-bottom: 2rem; /* More space */
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+        }
+        #login-form .form-group input {
+            box-shadow: var(--input-shadow-inset);
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        #login-form .btn {
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            width: 100%;
+            box-shadow: var(--button-shadow-base);
+            transition: all 0.15s ease-out;
+        }
+        #login-form .btn:hover {
+             transform: translateY(-1px); /* Slight lift on hover */
+             box-shadow: 0 12px 22px rgba(0, 0, 0, 0.5), 0 8px 8px rgba(0, 0, 0, 0.3);
+        }
+        #login-form .btn:active {
+            transform: translateY(2px); /* Simulate press */
+            box-shadow: var(--button-shadow-active);
+        }
+        /* === END Login Page Styling === */
+
+        /* === Sidebar Layout === */
+        #admin-dashboard { display: none; }
+        #sidebar {
+            background-color: var(--secondary-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 1rem;
+            transform: translateX(calc(-1 * var(--sidebar-width)));
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto; /* <-- FIX: ensures logout button is visible on small screens */
+        }
+        #sidebar.active { 
+            transform: translateX(0); 
+            box-shadow: var(--sidebar-shadow); /* Added shadow to active sidebar */
+        }
+        .sidebar-header {
+            padding: 0 0.5rem 1.5rem 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+        #view-switcher { 
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem; 
+            flex-grow: 1;
+        }
+        .nav-link { 
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 12px 15px; 
+            border: none; 
+            background-color: transparent; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 0.95rem; 
+            font-weight: 500; 
+            color: var(--text-secondary); 
+            transition: background-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s; /* Added transform/shadow for 3D */
+            text-align: left;
+            width: 100%;
+        }
+        .nav-link svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            fill: currentColor; /* Ensure SVG fill color changes with text */
+        }
+        .nav-link.active, .nav-link:hover { 
+            background-color: var(--primary-button-bg); 
+            color: var(--text-primary); 
+            transform: translateY(-1px); /* Slight lift on hover/active */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow on hover/active */
+        }
+        /* LOGOUT BUTTON SIZE REDUCTION */
+        #logout-btn {
+            margin-top: auto; /* Pushes logout to the bottom */
+            padding: 0.6rem 1.2rem; /* Reduced padding */
+            font-size: 0.85rem; /* Smaller font */
+        }
+        #logout-btn svg {
+            width: 18px; /* Smaller icon */
+            height: 18px;
+        }
+        /* END LOGOUT BUTTON SIZE REDUCTION */
+
+        #sidebar-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 199;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* === Main Content Area === */
+        #main-content {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .container { 
+            width: 100%; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 1.5rem; 
+        }
+        header { 
+            display: flex; 
+            align-items: center; 
+            gap: 1rem;
+            padding: 1rem 1.5rem; 
+            background-color: var(--secondary-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: var(--border-radius); 
+            margin-bottom: 2rem; 
+            position: sticky; /* Sticky header */
+            top: 1.5rem;
+            z-index: 100;
+            box-shadow: var(--card-shadow-lift); /* 3D Lift */
+        }
+        #menu-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            display: block; /* Visible on mobile */
+        }
+        #menu-toggle svg { width: 28px; height: 28px; }
+        #header-title { 
+            margin: 0; 
+            font-size: 1.5rem; 
+            font-weight: 600; 
+        }
+        
+        /* View Sections & Cards */
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card-section { 
+            background-color: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            padding: 2rem; 
+            border-radius: var(--border-radius); 
+            margin-bottom: 2rem; 
+            box-shadow: var(--card-shadow-lift); /* Strong 3D lift */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
+        }
+        .card-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 8px 8px rgba(0, 0, 0, 0.35); /* Deeper shadow on hover */
+        }
+        .card-section h2, .card-section h3 { 
+            margin-top: 0; 
+            font-weight: 600; 
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 0.75rem; 
+            margin-bottom: 1.5rem; 
+        }
+        
+        /* Forms, Tables, Buttons etc. */
+        #stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .stat-card { 
+            background-color: var(--secondary-bg); 
+            padding: 1.5rem; 
+            border-radius: var(--border-radius); 
+            border: 1px solid var(--border-color); 
+            box-shadow: var(--card-shadow-lift); /* 3D Lift */
+        }
+        .stat-card h3 { margin: 0 0 0.5rem 0; color: var(--text-secondary); font-weight: 500;}
+        .stat-card .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--accent-color); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary); font-size: 0.9rem; }
+        
+        /* 3D Inset look for form fields */
+        .form-group input, .form-group textarea, .form-group select { 
+            width: 100%; 
+            padding: 0.75rem; 
+            background-color: var(--primary-bg); 
+            border: 1px solid var(--border-color); 
+            color: var(--text-primary); 
+            border-radius: 6px; 
+            font-size: 1rem; 
+            font-family: 'Inter', sans-serif; 
+            transition: border-color 0.2s, box-shadow 0.2s; 
+            box-shadow: var(--input-shadow-inset); /* Inset shadow for 3D */
+        }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { 
+            outline: none; 
+            border-color: var(--accent-color); 
+            box-shadow: 0 0 0 0.2rem rgba(0, 188, 212, 0.25), var(--input-shadow-inset); /* Keep inset on focus */
+        }
+        .form-group .image-preview { 
+            max-width: 100px; 
+            height: auto; 
+            margin-top: 10px; 
+            border-radius: 6px; 
+            border: 1px solid var(--border-color); 
+            background-color: var(--primary-bg); 
+            display: none; 
+            object-fit: contain; /* Ensure full image is visible */
+            padding: 5px; /* Add padding for aesthetics */
+            max-height: 100px; /* Limit height for previews */
+        }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 1rem; }
+        .data-table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 1rem; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        th { background-color: #2a2a2a; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 600; cursor: pointer; } /* Sortable headers */
+        th.sortable:hover { background-color: #3a3a3a; }
+        th.sort-asc::after { content: ' \25B2'; } /* Up arrow */
+        th.sort-desc::after { content: ' \25BC'; } /* Down arrow */
+        td img { max-width: 80px; height: auto; border-radius: 6px; background-color: var(--secondary-bg); object-fit: contain; padding: 5px;}
+        td .actions { display: flex; gap: 0.75rem; }
+        .truncate { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* 3D Button Styles */
+        .btn { 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 0.5rem; 
+            padding: 0.75rem 1.5rem; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 0.95rem; 
+            font-weight: 600; 
+            text-decoration: none; 
+            box-shadow: var(--button-shadow-base); /* Raised button look */
+            transition: all 0.15s ease-out; /* Faster transition for press effect */
+        }
+        .btn:hover { 
+            transform: translateY(0); /* Remove translateY on general hover, use :active for press */
+            box-shadow: var(--button-shadow-base); /* Keep base shadow on hover */
+        }
+        .btn:active {
+            transform: translateY(2px); /* Simulate press */
+            box-shadow: var(--button-shadow-active); /* Pressed look */
+        }
+        
+        /* Specific Button Colors/Hover */
+        .btn-accent { background: var(--accent-gradient); color: var(--primary-bg); }
+        .btn-accent:hover { 
+             background: linear-gradient(135deg, #0093A5 0%, #3DA6B4 100%); 
+        }
+        .btn-secondary { background-color: var(--secondary-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background-color: #374151; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-danger:hover { background-color: #D93737; }
+        .btn-primary { background-color: var(--primary-button-bg); color: white; }
+        .btn-primary:hover { background-color: #2980b9; }
+
+        .btn svg { fill: currentColor; }
+        .btn-icon { padding: 0.5rem; width: 40px; height: 40px; border-radius: 50%; }
+        
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 1050; }
+        .toast { padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: 8px; color: white; background-color: var(--card-bg); border: 1px solid var(--border-color); opacity: 0; transform: translateX(100%); transition: all 0.4s ease; }
+        .toast.show { opacity: 1; transform: translateX(0); }
+        .toast.success { background-color: var(--success-color); border: none; }
+        .toast.error { background-color: var(--danger-color); border: none; }
+
+        /* === NEW: Custom Confirmation Modal Styles (3D Look) === */
+        #custom-confirm-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #custom-confirm-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+        #custom-confirm-modal {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--card-shadow-lift); /* Strong 3D lift */
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #custom-confirm-overlay.show #custom-confirm-modal {
+            transform: scale(1);
+        }
+        #confirm-message {
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        /* Applied 3D button styles to modal actions */
+        #confirm-cancel-btn {
+            background-color: var(--secondary-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.2rem;
+            box-shadow: var(--button-shadow-base);
+        }
+        #confirm-delete-btn {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            box-shadow: var(--button-shadow-base);
+        }
+        /* Reapply :hover and :active for 3D effect consistency */
+        #confirm-cancel-btn:hover { background-color: #374151; transform: translateY(0); }
+        #confirm-delete-btn:hover { background-color: #D93737; transform: translateY(0); }
+        #confirm-cancel-btn:active, #confirm-delete-btn:active {
+            transform: translateY(2px); 
+            box-shadow: var(--button-shadow-active);
+        }
+        /* === END Custom Confirmation Modal Styles === */
+
+        /* Rich Text Editor Styling (Quill.js) */
+        #editor-container {
+            min-height: 200px;
+            background-color: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: var(--input-shadow-inset);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+        .ql-toolbar {
+            background-color: var(--secondary-bg);
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+        }
+        .ql-container {
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            border: 1px solid var(--border-color);
+            border-top: none;
+        }
+        .ql-editor {
+            color: var(--text-primary);
+        }
+        .ql-editor.ql-blank::before {
+            color: var(--text-secondary);
+            font-style: normal;
+        }
+
+        .filter-sort-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-sort-bar input, .filter-sort-bar select {
+            flex-grow: 1;
+            max-width: 300px;
+        }
+
+        /* === Responsive Adjustments (Auto-Adjust) === */
+        @media (min-width: 992px) {
+            #sidebar {
+                transform: translateX(0); /* Sidebar always visible on desktop */
+            }
+            #main-content {
+                margin-left: var(--sidebar-width); /* Push content over */
+            }
+            #menu-toggle {
+                display: none; /* Hide hamburger on desktop */
+            }
+        }
+        @media (max-width: 991px) {
+            /* Adjust content margin on screens smaller than desktop to compensate for sticky header */
+             #main-content {
+                margin-left: 0;
+            }
+        }
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            header { top: 1rem; }
+            .card-section { padding: 1.25rem; }
+            .form-grid { grid-template-columns: 1fr; } /* Stack form fields on mobile */
+            .filter-sort-bar {
+                flex-direction: column;
+            }
+            .filter-sort-bar input, .filter-sort-bar select {
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <div id="login-page">
+        <div id="login-form-container">
+            <h1>Admin Panel</h1>
+            <form id="login-form">
+                <div class="form-group"><input type="email" id="login-email" class="form-control" placeholder="Email" required></div>
+                <div class="form-group"><input type="password" id="login-password" class="form-control" placeholder="Password" required></div>
+                <button type="submit" class="btn btn-accent">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-dashboard">
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="sidebar-header">Offers Admin</div>
+            <nav id="view-switcher">
+                <button class="nav-link active" data-view="dashboard-view">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path></svg>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-link" data-view="products-view">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21.822 7.431A1 1 0 0 0 21 7H7.414l-2-4H3a1 1 0 1 0 0 2h1.414l4.239 8.478A1 1 0 0 0 9.618 14H18a1 1 0 0 0 .94-.664l2.5-8a1 1 0 0 0-.618-.905zM16 20a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm-8 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"></path></svg>
+                    <span>Manage Products</span>
+                </button>
+                <button class="nav-link" data-view="sliders-view">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2 5.27L3.28 4L20 20.72L18.73 22l-3-3H5c-1.1 0-2-.9-2-2V7.27L2 5.27zM21 5c0-1.1-.9-2-2-2H7.82l2 2H19v10.18l2 2V5zm-4 6h-2.18l2 2H17v-2zm-3.18-4H12v1.18l2 2V7h-1.18z"></path></svg>
+                    <span>Manage Sliders</span>
+                </button>
+                <button class="nav-link" data-view="categories-view">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.11 0-2 .89-2 2v14c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.89-2-2-2h-8l-2-2z"></path></svg>
+                    <span>Manage Categories</span>
+                </button>
+                <button class="nav-link" data-view="pages-view">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"></path></svg>
+                    <span>Edit Pages</span>
+                </button>
+            </nav>
+            <button id="logout-btn" class="btn btn-danger">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 17v-3H9v-4h7V7l5 5-5 5zM14 2a2 2 0 0 1 2 2v2h-2V4H5v16h9v-2h2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9z"></path></svg>
+                <span>Logout</span>
+            </button>
+        </aside>
+        <div id="sidebar-overlay"></div>
+        
+        <!-- Main Content -->
+        <div id="main-content">
+            <div class="container">
+                <header>
+                    <button id="menu-toggle" title="Toggle Menu">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z"></path></svg>
+                    </button>
+                    <h1 id="header-title">Dashboard</h1>
+                </header>
+
+                <main>
+                    <!-- Dashboard View -->
+                    <div id="dashboard-view" class="view-section active">
+                        <div id="stats-grid">
+                            <div class="stat-card">
+                                <h3>Total Products</h3>
+                                <div class="stat-number" id="total-products">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Total Sliders</h3>
+                                <div class="stat-number" id="total-sliders">0</div>
+                            </div>
+                             <div class="stat-card">
+                                <h3>Total Categories</h3>
+                                <div class="stat-number" id="total-categories">0</div> 
+                            </div>
+                            <div class="stat-card">
+                                <h3>Managed Pages</h3>
+                                <div class="stat-number" id="total-pages">3</div> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products View -->
+                    <div id="products-view" class="view-section">
+                         <section class="card-section">
+                            <h2>Product Editor</h2>
+                            <form id="product-form">
+                                <input type="hidden" id="product-id">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="product-name">Product Name</label>
+                                        <input type="text" id="product-name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="product-category">Category</label>
+                                        <select id="product-category" required>
+                                            <option value="">Select Category</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="product-current-price">Current Price (₹)</label>
+                                        <input type="number" id="product-current-price" step="0.01" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="product-original-price">Original Price (₹)</label>
+                                        <input type="number" id="product-original-price" step="0.01">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="product-rating">Rating (1-5)</label>
+                                        <input type="number" id="product-rating" min="1" max="5" step="0.1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="button-text">Button Label</label>
+                                        <input type="text" id="button-text" placeholder="e.g., Buy Now" required>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="button-url">Button URL (Affiliate Link)</label>
+                                        <input type="url" id="button-url" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="product-image-url">Product Image URL</label>
+                                        <input type="url" id="product-image-url" placeholder="https://example.com/image.jpg">
+                                        <img id="product-image-preview" class="image-preview" alt="Image Preview">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="product-description">Description</label>
+                                        <textarea id="product-description" placeholder="A short description for the product, especially if it's a Deal of the Day."></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="product-expiry-date">Expiry Date</label>
+                                        <input type="date" id="product-expiry-date">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="product-expiry-time">Expiry Time</label>
+                                        <input type="time" id="product-expiry-time">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <div class="checkbox-group">
+                                            <input type="checkbox" id="product-isDealOfTheDay">
+                                            <label for="product-isDealOfTheDay">Set as Deal of the Day</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-accent"><span>Save Product</span></button>
+                                <button type="button" id="cancel-product-edit" class="btn btn-secondary" style="display: none;">Cancel Edit</button>
+                            </form>
+                        </section>
+                        <section class="card-section">
+                            <h3>Current Products</h3>
+                            <div class="filter-sort-bar">
+                                <input type="text" id="product-search" placeholder="Search products...">
+                                <select id="product-filter-category">
+                                    <option value="all">Filter by Category</option>
+                                </select>
+                            </div>
+                            <div class="data-table-container">
+                                <table id="products-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th class="sortable" data-sort="name">Name</th>
+                                            <th class="sortable" data-sort="category">Category</th>
+                                            <th class="sortable" data-sort="currentPrice">Price</th>
+                                            <th class="sortable" data-sort="rating">Rating</th>
+                                            <th class="sortable" data-sort="expiryDate">Expiry</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="products-tbody"></tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Sliders View -->
+                    <div id="sliders-view" class="view-section">
+                       <section class="card-section">
+                        <h2>Slider Editor</h2>
+                        <form id="slider-form">
+                            <input type="hidden" id="slider-id">
+                            <div class="form-group">
+                                <label for="slider-image-url">Slider Image URL</label>
+                                <input type="url" id="slider-image-url" placeholder="https://example.com/image.jpg" required> 
+                                <img id="slider-image-preview" class="image-preview" alt="Image Preview">
+                            </div>
+                            <div class="form-group">
+                                <label for="slider-url">Redirect URL</label>
+                                <input type="url" id="slider-url" required>
+                            </div>
+                            <button type="submit" class="btn btn-accent"><span>Save Slide</span></button>
+                            <button type="button" id="cancel-slider-edit" class="btn btn-secondary" style="display: none;">Cancel Edit</button>
+                        </form>
+                    </section>
+                    <section class="card-section">
+                        <h3>Current Slider Images</h3>
+                        <div class="filter-sort-bar">
+                            <input type="text" id="slider-search" placeholder="Search sliders...">
+                        </div>
+                        <div class="data-table-container">
+                            <table id="sliders-table">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th class="sortable" data-sort="url">Redirect URL</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sliders-tbody"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                    </div>
+                    
+                    <!-- Categories View -->
+                    <div id="categories-view" class="view-section">
+                        <section class="card-section">
+                            <h2>Category Editor</h2>
+                            <form id="category-form">
+                                <input type="hidden" id="category-id">
+                                <div class="form-group">
+                                    <label for="category-name">Category Name</label>
+                                    <input type="text" id="category-name" required>
+                                </div>
+                                <button type="submit" class="btn btn-accent"><span>Save Category</span></button>
+                                <button type="button" id="cancel-category-edit" class="btn btn-secondary" style="display: none;">Cancel Edit</button>
+                            </form>
+                        </section>
+                        <section class="card-section">
+                            <h3>Current Categories</h3>
+                            <div class="filter-sort-bar">
+                                <input type="text" id="category-search" placeholder="Search categories...">
+                            </div>
+                            <div class="data-table-container">
+                                <table id="categories-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="sortable" data-sort="name">Name</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="categories-tbody"></tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Pages View -->
+                    <div id="pages-view" class="view-section">
+                        <section class="card-section">
+                        <h2>Page Content Editor</h2>
+                        <form id="page-form">
+                            <div class="form-group">
+                                <label for="page-select">Select Page to Edit</label>
+                                <select id="page-select">
+                                    <option value="aboutUs">About Us</option>
+                                    <option value="privacyPolicy">Privacy Policy</option>
+                                    <option value="affiliateDisclosure">Affiliate Disclosure</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="page-content">Page Content (HTML is allowed)</label>
+                                <div id="editor-container"></div>
+                                <input type="hidden" id="page-content-hidden"> <!-- To store Quill HTML -->
+                            </div>
+                            <button type="submit" class="btn btn-accent"><span>Save Page Content</span></button>
+                        </form>
+                    </section>
+                    </div>
+
+                </main>
+            </div>
+        </div>
+    </div>
+    
+    <!-- NEW: Custom Confirmation Modal HTML -->
+    <div id="custom-confirm-overlay">
+        <div id="custom-confirm-modal">
+            <p id="confirm-message">Are you sure you want to delete this item?</p>
+            <div class="modal-actions">
+                <button id="confirm-cancel-btn" class="btn btn-secondary">Cancel</button>
+                <button id="confirm-delete-btn" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+    <!-- END NEW: Custom Confirmation Modal HTML -->
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Quill.js JS for Rich Text Editor -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.6/dist/quill.js"></script>
+
+    <script>
+        // --- FIREBASE CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCGrsuFekyBXxcb5KCpnFoguZd1Sayy1D4",
+            authDomain: "shop-45e7c.firebaseapp.com",
+            databaseURL: "https://shop-45e7c-default-rtdb.firebaseio.com",
+            projectId: "shop-45e7c",
+            storageBucket: "shop-45e7c.appspot.com",
+            messagingSenderId: "79947037107",
+            appId: "1:79947037107:web:1dc461db53f49382a773c6"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        
+        // --- DOM ELEMENTS (Updated with Custom Confirm Modal) ---
+        const loginPage = document.getElementById('login-page');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const loginForm = document.getElementById('login-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const viewSwitcher = document.getElementById('view-switcher');
+        const viewSections = document.querySelectorAll('.view-section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const menuToggle = document.getElementById('menu-toggle');
+        const headerTitle = document.getElementById('header-title');
+
+        const productForm = document.getElementById('product-form');
+        const productIdInput = document.getElementById('product-id');
+        const productNameInput = document.getElementById('product-name');
+        const productImageUrlInput = document.getElementById('product-image-url');
+        const productImagePreview = document.getElementById('product-image-preview');
+        const buttonTextInput = document.getElementById('button-text');
+        const buttonUrlInput = document.getElementById('button-url');
+        const productCategorySelect = document.getElementById('product-category');
+        const currentPriceInput = document.getElementById('product-current-price');
+        const originalPriceInput = document.getElementById('product-original-price');
+        const ratingInput = document.getElementById('product-rating');
+        const descriptionInput = document.getElementById('product-description');
+        const isDealOfTheDayInput = document.getElementById('product-isDealOfTheDay');
+        const productExpiryDateInput = document.getElementById('product-expiry-date');
+        const productExpiryTimeInput = document.getElementById('product-expiry-time');
+        const productsTbody = document.getElementById('products-tbody');
+        const cancelProductEditBtn = document.getElementById('cancel-product-edit');
+        const productSearchInput = document.getElementById('product-search');
+        const productFilterCategorySelect = document.getElementById('product-filter-category');
+
+        const sliderForm = document.getElementById('slider-form');
+        const sliderIdInput = document.getElementById('slider-id');
+        const sliderImageUrlInput = document.getElementById('slider-image-url');
+        const sliderImagePreview = document.getElementById('slider-image-preview');
+        const sliderUrlInput = document.getElementById('slider-url');
+        const slidersTbody = document.getElementById('sliders-tbody');
+        const cancelSliderEditBtn = document.getElementById('cancel-slider-edit');
+        const sliderSearchInput = document.getElementById('slider-search');
+
+        const categoryForm = document.getElementById('category-form');
+        const categoryIdInput = document.getElementById('category-id');
+        const categoryNameInput = document.getElementById('category-name');
+        const categoriesTbody = document.getElementById('categories-tbody');
+        const cancelCategoryEditBtn = document.getElementById('cancel-category-edit');
+        const categorySearchInput = document.getElementById('category-search');
+
+        const pageSelect = document.getElementById('page-select');
+        const pageContentHidden = document.getElementById('page-content-hidden');
+        
+        // Custom Confirm Modal Elements
+        const customConfirmOverlay = document.getElementById('custom-confirm-overlay');
+        const confirmMessage = document.getElementById('confirm-message');
+        const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
+        // Quill Rich Text Editor
+        let quill;
+        const editorContainer = document.getElementById('editor-container');
+        if (editorContainer) {
+            quill = new Quill(editorContainer, {
+                theme: 'snow',
+                placeholder: 'Enter page content here...',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'script': 'sub'}, { 'script': 'super' }],
+                        [{ 'indent': '-1'}, { 'indent': '+1' }],
+                        [{ 'direction': 'rtl' }],
+                        [{ 'align': [] }],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                }
+            });
+            quill.on('text-change', () => {
+                pageContentHidden.value = quill.root.innerHTML;
+            });
+        }
+        
+        // --- SVG ICONS ---
+        const editIcon = `<svg width="24" height="24" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`;
+        const deleteIcon = `<svg width="24" height="24" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
+        
+        // --- TOAST NOTIFICATION ---
+        function showToast(message, type = 'success') { 
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div'); 
+            toast.className = `toast ${type}`; 
+            toast.textContent = message; 
+            container.appendChild(toast); 
+            setTimeout(() => { toast.classList.add('show'); }, 10); 
+            setTimeout(() => { 
+                toast.classList.remove('show'); 
+                setTimeout(() => container.removeChild(toast), 400); 
+            }, 3000); 
+        }
+
+        // --- CUSTOM CONFIRM MODAL LOGIC ---
+        let currentConfirmCallback = null;
+
+        function showCustomConfirm(message, onConfirm) {
+            confirmMessage.textContent = message;
+            currentConfirmCallback = onConfirm;
+            customConfirmOverlay.classList.add('show');
+        }
+
+        function hideCustomConfirm() {
+            customConfirmOverlay.classList.remove('show');
+            currentConfirmCallback = null;
+        }
+
+        confirmCancelBtn.addEventListener('click', hideCustomConfirm);
+        customConfirmOverlay.addEventListener('click', (e) => {
+            if (e.target === customConfirmOverlay) {
+                hideCustomConfirm();
+            }
+        });
+        confirmDeleteBtn.addEventListener('click', () => {
+            if (currentConfirmCallback) {
+                currentConfirmCallback();
+            }
+            hideCustomConfirm();
+        });
+        // --- END CUSTOM CONFIRM MODAL LOGIC ---
+
+        // --- IMAGE PREVIEW FROM URL ---
+        const PLACEHOLDER_IMAGE_ADMIN = "https://via.placeholder.com/100/282828/94A3B8?text=No+Image";
+
+        function setupImagePreviewFromUrl(urlInputEl, previewEl) {
+            function updatePreview() {
+                const url = urlInputEl.value.trim();
+                if (url) {
+                    previewEl.src = url;
+                    previewEl.style.display = 'block';
+                } else {
+                    previewEl.src = PLACEHOLDER_IMAGE_ADMIN;
+                    previewEl.style.display = 'none';
+                }
+            }
+
+            urlInputEl.addEventListener('input', updatePreview);
+            urlInputEl.addEventListener('change', updatePreview);
+
+            previewEl.onerror = () => { 
+                previewEl.src = PLACEHOLDER_IMAGE_ADMIN; 
+                previewEl.style.display = 'block'; 
+            };
+        }
+
+        setupImagePreviewFromUrl(productImageUrlInput, productImagePreview);
+        setupImagePreviewFromUrl(sliderImageUrlInput, sliderImagePreview);
+        
+        // --- AUTH & PAGE VISIBILITY ---
+        auth.onAuthStateChanged(user => { 
+            if (user) { 
+                loginPage.style.display = 'none'; 
+                adminDashboard.style.display = 'block'; 
+                loadAllData(); 
+            } else { 
+                loginPage.style.display = 'flex'; 
+                adminDashboard.style.display = 'none'; 
+            } 
+        });
+        loginForm.addEventListener('submit', (e) => { 
+            e.preventDefault(); 
+            auth.signInWithEmailAndPassword(document.getElementById('login-email').value, document.getElementById('login-password').value)
+              .catch(err => showToast(`Login Failed: ${err.message}`, 'error')); 
+        });
+        logoutBtn.addEventListener('click', () => auth.signOut());
+
+        // --- SIDEBAR TOGGLE LOGIC ---
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        }
+        menuToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // --- VIEW SWITCHING ---
+        viewSwitcher.addEventListener('click', (e) => { 
+            const navLink = e.target.closest('.nav-link');
+            if (navLink) { 
+                showView(navLink.dataset.view, navLink.querySelector('span').textContent);
+                if (window.innerWidth < 992) {
+                    toggleSidebar();
+                }
+            } 
+        });
+
+        function showView(viewId, title) { 
+            viewSections.forEach(section => section.classList.toggle('active', section.id === viewId)); 
+            navLinks.forEach(btn => btn.classList.toggle('active', btn.dataset.view === viewId)); 
+            headerTitle.textContent = title;
+
+            if (quill) {
+                if (viewId === 'pages-view') {
+                    quill.enable(true);
+                    loadSelectedPageContent();
+                } else {
+                    quill.enable(false);
+                }
+            }
+        }
+        
+        // --- DB REFS ---
+        const productsRef = db.ref('products');
+        const sliderRef = db.ref('slider');
+        const pagesRef = db.ref('pages');
+        const categoriesRef = db.ref('categories');
+
+        // --- LOAD ALL DATA ---
+        function loadAllData() {
+            loadProducts(); 
+            loadSliders(); 
+            loadCategories();
+            loadDashboardStats();
+        }
+
+        // --- DASHBOARD STATS ---
+        function loadDashboardStats() { 
+            productsRef.on('value', snap => { document.getElementById('total-products').textContent = snap.numChildren(); }); 
+            sliderRef.on('value', snap => { document.getElementById('total-sliders').textContent = snap.numChildren(); }); 
+            categoriesRef.on('value', snap => { document.getElementById('total-categories').textContent = snap.numChildren(); });
+            pagesRef.on('value', snap => { document.getElementById('total-pages').textContent = snap.numChildren(); });
+        }
+        
+        // --- PRODUCT MANAGEMENT ---
+        let currentProductsData = []; 
+
+        productForm.addEventListener('submit', async (e) => { 
+            e.preventDefault(); 
+            const imageUrl = productImageUrlInput.value.trim();
+            if (!imageUrl) {
+                showToast('Please provide an image URL for the product.', 'error');
+                return;
+            }
+            const productData = { 
+                name: productNameInput.value.trim(), 
+                image: imageUrl, 
+                buttonText: buttonTextInput.value.trim(), 
+                buttonUrl: buttonUrlInput.value.trim(), 
+                category: productCategorySelect.value, 
+                currentPrice: parseFloat(currentPriceInput.value) || 0, 
+                originalPrice: parseFloat(originalPriceInput.value) || 0, 
+                rating: parseFloat(ratingInput.value) || 0, 
+                description: descriptionInput.value.trim(), 
+                isDealOfTheDay: isDealOfTheDayInput.checked, 
+                expiryDate: productExpiryDateInput.value || null,
+                expiryTime: productExpiryTimeInput.value || null,
+            }; 
+            const productId = productIdInput.value; 
+            
+            if (productData.isDealOfTheDay) { 
+                const snapshot = await productsRef.orderByChild('isDealOfTheDay').equalTo(true).once('value'); 
+                const updates = {}; 
+                snapshot.forEach(child => { 
+                    if (child.key !== productId) { 
+                        updates[child.key + '/isDealOfTheDay'] = false; 
+                    } 
+                }); 
+                if (Object.keys(updates).length > 0) {
+                    await productsRef.update(updates); 
+                }
+            } 
+            
+            const op = productId ? productsRef.child(productId).update(productData) : productsRef.push(productData); 
+            op.then(() => { 
+                showToast(`Product ${productId ? 'updated' : 'added'}!`); 
+                resetProductForm(); 
+            }).catch(err => showToast(`Error: ${err.message}`, 'error')); 
+        });
+        
+        let currentProductSortColumn = '';
+        let currentProductSortDirection = 'asc';
+
+        document.getElementById('products-table').addEventListener('click', (e) => {
+            const th = e.target.closest('th');
+            if (th && th.classList.contains('sortable')) {
+                const sortKey = th.dataset.sort;
+                if (currentProductSortColumn === sortKey) {
+                    currentProductSortDirection = currentProductSortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentProductSortColumn = sortKey;
+                    currentProductSortDirection = 'asc';
+                }
+                document.querySelectorAll('#products-table th.sortable').forEach(header => {
+                    header.classList.remove('sort-asc', 'sort-desc');
+                });
+                th.classList.add(`sort-${currentProductSortDirection}`);
+                renderProductsTable(currentProductsData);
+            }
+        });
+
+        productSearchInput.addEventListener('input', () => renderProductsTable(currentProductsData));
+        productFilterCategorySelect.addEventListener('change', () => renderProductsTable(currentProductsData));
+
+        function renderProductsTable(productsToRender) {
+            productsTbody.innerHTML = '';
+            
+            let filtered = [...productsToRender]; 
+
+            const searchTerm = productSearchInput.value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(p => 
+                    (p.name && p.name.toLowerCase().includes(searchTerm)) ||
+                    (p.category && p.category.toLowerCase().includes(searchTerm)) ||
+                    (p.description && p.description.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            const filterCategory = productFilterCategorySelect.value;
+            if (filterCategory !== 'all') {
+                filtered = filtered.filter(p => p.category === filterCategory);
+            }
+
+            if (currentProductSortColumn) {
+                filtered.sort((a, b) => {
+                    let valA = a[currentProductSortColumn];
+                    let valB = b[currentProductSortColumn];
+
+                    if (['currentPrice', 'originalPrice', 'rating'].includes(currentProductSortColumn)) {
+                        valA = parseFloat(valA) || 0;
+                        valB = parseFloat(valB) || 0;
+                    }
+                    if (currentProductSortColumn === 'expiryDate') {
+                        valA = valA ? new Date(valA + (a.expiryTime ? 'T' + a.expiryTime : '')) : new Date(0); 
+                        valB = valB ? new Date(valB + (b.expiryTime ? 'T' + b.expiryTime : '')) : new Date(0);
+                    } else if (typeof valA === 'string') {
+                        valA = valA.toLowerCase();
+                        valB = valB.toLowerCase();
+                    }
+
+                    if (valA < valB) return currentProductSortDirection === 'asc' ? -1 : 1;
+                    if (valA > valB) return currentProductSortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            if (filtered.length === 0) {
+                productsTbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No products found matching criteria.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(p => { 
+                const id = p.id; 
+                const escapedProduct = JSON.stringify(p).replace(/'/g, "\\'"); 
+                const tr = document.createElement('tr'); 
+                tr.innerHTML = `
+                    <td><img src="${p.image || PLACEHOLDER_IMAGE_ADMIN}" alt="${p.name}" onerror="this.src='${PLACEHOLDER_IMAGE_ADMIN}';"></td>
+                    <td>${p.name} ${p.isDealOfTheDay ? '⭐' : ''}</td>
+                    <td>${p.category || 'N/A'}</td>
+                    <td>₹${p.currentPrice ? p.currentPrice.toLocaleString('en-IN') : 'N/A'}</td>
+                    <td>${p.rating ? p.rating.toFixed(1) : 'N/A'}</td>
+                    <td>${p.expiryDate ? p.expiryDate + (p.expiryTime ? ' ' + p.expiryTime : '') : 'N/A'}</td>
+                    <td class="actions">
+                        <button class="btn btn-primary btn-icon" title="Edit" onclick='editProduct("${id}", ${escapedProduct})'>${editIcon}</button>
+                        <button class="btn btn-danger btn-icon" title="Delete" onclick="deleteProduct('${id}')">${deleteIcon}</button>
+                    </td>`; 
+                productsTbody.appendChild(tr); 
+            }); 
+        }
+
+        function loadProducts() { 
+            productsRef.on('value', snapshot => { 
+                const productsObj = snapshot.val();
+                const productsArray = productsObj ? Object.keys(productsObj).map(key => ({ ...productsObj[key], id: key })) : [];
+                currentProductsData = productsArray; 
+                renderProductsTable(currentProductsData);
+            }); 
+        }
+        
+        window.editProduct = (id, p) => { 
+            productIdInput.value = id; 
+            productNameInput.value = p.name || ''; 
+            productImageUrlInput.value = p.image || '';
+            const event = new Event('input');
+            productImageUrlInput.dispatchEvent(event);
+            buttonTextInput.value = p.buttonText || ''; 
+            buttonUrlInput.value = p.buttonUrl || ''; 
+            productCategorySelect.value = p.category || ''; 
+            currentPriceInput.value = p.currentPrice || ''; 
+            originalPriceInput.value = p.originalPrice || ''; 
+            ratingInput.value = p.rating || ''; 
+            descriptionInput.value = p.description || ''; 
+            isDealOfTheDayInput.checked = p.isDealOfTheDay || false; 
+            productExpiryDateInput.value = p.expiryDate || '';
+            productExpiryTimeInput.value = p.expiryTime || '';
+            cancelProductEditBtn.style.display = 'inline-block'; 
+            showView('products-view', 'Manage Products'); 
+            productForm.scrollIntoView({ behavior: 'smooth' }); 
+        };
+        
+        window.deleteProduct = (id) => { 
+            showCustomConfirm('Are you sure you want to delete this product?', () => {
+                productsRef.child(id).remove()
+                    .then(() => showToast('Product deleted.'))
+                    .catch(err => showToast(`Error: ${err.message}`, 'error')); 
+            });
+        };
+        
+        function resetProductForm() { 
+            productForm.reset(); 
+            productIdInput.value = ''; 
+            productImagePreview.style.display = 'none'; 
+            cancelProductEditBtn.style.display = 'none'; 
+            productCategorySelect.value = ''; 
+        }
+        cancelProductEditBtn.addEventListener('click', resetProductForm);
+        
+        // --- SLIDER MANAGEMENT ---
+        let currentSlidersData = []; 
+
+        sliderForm.addEventListener('submit', async (e) => { 
+            e.preventDefault(); 
+            const imageUrl = sliderImageUrlInput.value.trim();
+            if (!imageUrl) {
+                showToast('Please provide an image URL for the slider.', 'error');
+                return;
+            }
+            const sliderData = { 
+                image: imageUrl, 
+                url: sliderUrlInput.value.trim() 
+            }; 
+            const sliderId = sliderIdInput.value; 
+            const op = sliderId ? sliderRef.child(sliderId).update(sliderData) : sliderRef.push(sliderData); 
+            op.then(() => { 
+                showToast(`Slide ${sliderId ? 'updated' : 'added'}!`); 
+                resetSliderForm(); 
+            }).catch(err => showToast(`Error: ${err.message}`, 'error')); 
+        });
+
+        let currentSliderSortColumn = '';
+        let currentSliderSortDirection = 'asc';
+
+        document.getElementById('sliders-table').addEventListener('click', (e) => {
+            const th = e.target.closest('th');
+            if (th && th.classList.contains('sortable')) {
+                const sortKey = th.dataset.sort;
+                if (currentSliderSortColumn === sortKey) {
+                    currentSliderSortDirection = currentSliderSortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSliderSortColumn = sortKey;
+                    currentSliderSortDirection = 'asc';
+                }
+                document.querySelectorAll('#sliders-table th.sortable').forEach(header => {
+                    header.classList.remove('sort-asc', 'sort-desc');
+                });
+                th.classList.add(`sort-${currentSliderSortDirection}`);
+                renderSlidersTable(currentSlidersData);
+            }
+        });
+
+        sliderSearchInput.addEventListener('input', () => renderSlidersTable(currentSlidersData));
+        
+        function renderSlidersTable(slidersToRender) { 
+            slidersTbody.innerHTML = ''; 
+            let filtered = [...slidersToRender];
+            const searchTerm = sliderSearchInput.value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(s => (s.url && s.url.toLowerCase().includes(searchTerm)));
+            }
+
+            if (currentSliderSortColumn) {
+                filtered.sort((a, b) => {
+                    const valA = a[currentSliderSortColumn] ? a[currentSliderSortColumn].toLowerCase() : '';
+                    const valB = b[currentSliderSortColumn] ? b[currentSliderSortColumn].toLowerCase() : '';
+                    if (valA < valB) return currentSliderSortDirection === 'asc' ? -1 : 1;
+                    if (valA > valB) return currentSliderSortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            if (filtered.length === 0) {
+                slidersTbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No sliders found matching criteria.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(s => { 
+                const id = s.id; 
+                const tr = document.createElement('tr'); 
+                tr.innerHTML = `
+                    <td><img src="${s.image || PLACEHOLDER_IMAGE_ADMIN}" alt="Slider" onerror="this.src='${PLACEHOLDER_IMAGE_ADMIN}';"></td>
+                    <td class="truncate"><a href="${s.url}" target="_blank">${s.url}</a></td>
+                    <td class="actions">
+                        <button class="btn btn-primary btn-icon" title="Edit" onclick="editSlider('${id}', '${s.image}', '${s.url}')">${editIcon}</button>
+                        <button class="btn btn-danger btn-icon" title="Delete" onclick="deleteSlider('${id}')">${deleteIcon}</button>
+                    </td>`; 
+                slidersTbody.appendChild(tr); 
+            }); 
+        }
+
+        function loadSliders() { 
+            sliderRef.on('value', snapshot => { 
+                const slidersObj = snapshot.val();
+                currentSlidersData = slidersObj ? Object.keys(slidersObj).map(key => ({ ...slidersObj[key], id: key })) : [];
+                renderSlidersTable(currentSlidersData);
+            }); 
+        }
+        
+        window.editSlider = (id, image, url) => { 
+            sliderIdInput.value = id; 
+            sliderImageUrlInput.value = image; 
+            const event = new Event('input');
+            sliderImageUrlInput.dispatchEvent(event);
+            sliderUrlInput.value = url; 
+            cancelSliderEditBtn.style.display = 'inline-block'; 
+            showView('sliders-view', 'Manage Sliders'); 
+            sliderForm.scrollIntoView({ behavior: 'smooth' }); 
+        };
+        
+        window.deleteSlider = (id) => { 
+            showCustomConfirm('Are you sure you want to delete this slide?', () => {
+                sliderRef.child(id).remove()
+                    .then(() => showToast('Slide deleted.'))
+                    .catch(err => showToast(`Error: ${err.message}`, 'error')); 
+            });
+        };
+        
+        function resetSliderForm() { 
+            sliderForm.reset(); 
+            sliderIdInput.value = ''; 
+            sliderImagePreview.style.display = 'none'; 
+            cancelSliderEditBtn.style.display = 'none'; 
+        }
+        cancelSliderEditBtn.addEventListener('click', resetSliderForm);
+
+        // --- CATEGORY MANAGEMENT ---
+        let currentCategoriesData = []; 
+
+        categoryForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const categoryData = {
+                name: categoryNameInput.value.trim()
+            };
+            const categoryId = categoryIdInput.value;
+            const op = categoryId ? categoriesRef.child(categoryId).update(categoryData) : categoriesRef.push(categoryData);
+            op.then(() => {
+                showToast(`Category ${categoryId ? 'updated' : 'added'}!`);
+                resetCategoryForm();
+            }).catch(err => showToast(`Error: ${err.message}`, 'error'));
+        });
+
+        let currentCategorySortColumn = '';
+        let currentCategorySortDirection = 'asc';
+
+        document.getElementById('categories-table').addEventListener('click', (e) => {
+            const th = e.target.closest('th');
+            if (th && th.classList.contains('sortable')) {
+                const sortKey = th.dataset.sort;
+                if (currentCategorySortColumn === sortKey) {
+                    currentCategorySortDirection = currentCategorySortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentCategorySortColumn = sortKey;
+                    currentCategorySortDirection = 'asc';
+                }
+                document.querySelectorAll('#categories-table th.sortable').forEach(header => {
+                    header.classList.remove('sort-asc', 'sort-desc');
+                });
+                th.classList.add(`sort-${currentCategorySortDirection}`);
+                renderCategoriesTable(currentCategoriesData);
+            }
+        });
+
+        categorySearchInput.addEventListener('input', () => renderCategoriesTable(currentCategoriesData));
+
+        function renderCategoriesTable(categoriesToRender) {
+            categoriesTbody.innerHTML = '';
+
+            let filtered = [...categoriesToRender];
+            const searchTerm = categorySearchInput.value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(c => c.name.toLowerCase().includes(searchTerm));
+            }
+
+            if (currentCategorySortColumn) {
+                filtered.sort((a, b) => {
+                    const valA = a[currentCategorySortColumn] ? a[currentCategorySortColumn].toLowerCase() : '';
+                    const valB = b[currentCategorySortColumn] ? b[currentCategorySortColumn].toLowerCase() : '';
+                    if (valA < valB) return currentCategorySortDirection === 'asc' ? -1 : 1;
+                    if (valA > valB) return currentCategorySortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            if (filtered.length === 0) {
+                categoriesTbody.innerHTML = `<tr><td colspan="2" style="text-align:center;">No categories found matching criteria.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(c => {
+                const id = c.id;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${c.name}</td>
+                    <td class="actions">
+                        <button class="btn btn-primary btn-icon" title="Edit" onclick="editCategory('${id}', '${c.name}')">${editIcon}</button>
+                        <button class="btn btn-danger btn-icon" title="Delete" onclick="deleteCategory('${id}')">${deleteIcon}</button>
+                    </td>`;
+                categoriesTbody.appendChild(tr);
+            });
+        }
+
+        function loadCategories() {
+            categoriesRef.on('value', snapshot => {
+                const categoriesObj = snapshot.val();
+                const categoriesArray = categoriesObj ? Object.keys(categoriesObj).map(key => ({ ...categoriesObj[key], id: key })) : [];
+                currentCategoriesData = categoriesArray;
+                renderCategoriesTable(currentCategoriesData);
+
+                const sortedCategories = categoriesArray.sort((a,b) => a.name.localeCompare(b.name));
+                
+                productCategorySelect.innerHTML = '<option value="">Select Category</option>';
+                productFilterCategorySelect.innerHTML = '<option value="all">Filter by Category</option>';
+                
+                sortedCategories.forEach(cat => {
+                    const option1 = document.createElement('option');
+                    option1.value = cat.name;
+                    option1.textContent = cat.name;
+                    productCategorySelect.appendChild(option1);
+
+                    const option2 = document.createElement('option');
+                    option2.value = cat.name;
+                    option2.textContent = cat.name;
+                    productFilterCategorySelect.appendChild(option2);
+                });
+            });
+        }
+
+        window.editCategory = (id, name) => {
+            categoryIdInput.value = id;
+            categoryNameInput.value = name;
+            cancelCategoryEditBtn.style.display = 'inline-block';
+            showView('categories-view', 'Manage Categories');
+            categoryForm.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.deleteCategory = (id) => {
+            showCustomConfirm('Are you sure you want to delete this category? Products associated with this category will remain, but their category selection will be blank.', () => {
+                categoriesRef.child(id).remove()
+                    .then(() => showToast('Category deleted.'))
+                    .catch(err => showToast(`Error: ${err.message}`, 'error'));
+            });
+        };
+
+        function resetCategoryForm() {
+            categoryForm.reset();
+            categoryIdInput.value = '';
+            cancelCategoryEditBtn.style.display = 'none';
+        }
+        cancelCategoryEditBtn.addEventListener('click', resetCategoryForm);
+        
+        // --- PAGE MANAGEMENT ---
+        const pageForm = document.getElementById('page-form');
+        
+        pageSelect.addEventListener('change', () => { 
+            loadSelectedPageContent(); 
+        });
+        
+        function loadSelectedPageContent() { 
+            const selectedPage = pageSelect.value; 
+            if (selectedPage) { 
+                pagesRef.child(selectedPage).child('content').once('value', snapshot => { 
+                    if (quill) {
+                        quill.root.innerHTML = snapshot.val() || ''; 
+                        pageContentHidden.value = quill.root.innerHTML;
+                    }
+                }); 
+            } 
+        }
+        
+        pageForm.addEventListener('submit', (e) => { 
+            e.preventDefault(); 
+            const selectedPage = pageSelect.value; 
+            const newContent = pageContentHidden.value.trim(); 
+            pagesRef.child(selectedPage).set({ content: newContent })
+                .then(() => { 
+                    showToast(`${pageSelect.options[pageSelect.selectedIndex].text} page updated!`); 
+                })
+                .catch(err => showToast(`Error: ${err.message}`, 'error')); 
+        });
+        
+    </script>
+</body>
+</html>
