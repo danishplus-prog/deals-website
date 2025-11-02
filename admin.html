@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Admin Panel - Special Offers</title>
-    <!-- Font: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Quill.js CSS for Rich Text Editor -->
     <link href="https://cdn.jsdelivr.net/npm/quill@1.3.6/dist/quill.snow.css" rel="stylesheet">
     <style>
         /* === Design System - UPDATED COLOR SCHEME & 3D LOOK === */
@@ -93,7 +91,7 @@
         }
         #login-form .btn:hover {
              transform: translateY(-1px); /* Slight lift on hover */
-             box-shadow: 0 12px 22px rgba(0, 0, 0, 0.5), 0 8px 8px rgba(0, 0, 0, 0.3);
+             box-shadow: 0 12px 22px rgba(0, 0, 0, 0.5), 0 8px 10px rgba(0, 0, 0, 0.3);
         }
         #login-form .btn:active {
             transform: translateY(2px); /* Simulate press */
@@ -117,11 +115,11 @@
             padding: 1.5rem 1rem;
             transform: translateX(calc(-1 * var(--sidebar-width)));
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto; /* <-- FIX: ensures logout button is visible on small screens */
+            overflow-y: auto; 
         }
         #sidebar.active { 
             transform: translateX(0); 
-            box-shadow: var(--sidebar-shadow); /* Added shadow to active sidebar */
+            box-shadow: var(--sidebar-shadow); 
         }
         .sidebar-header {
             padding: 0 0.5rem 1.5rem 0.5rem;
@@ -149,7 +147,7 @@
             font-size: 0.95rem; 
             font-weight: 500; 
             color: var(--text-secondary); 
-            transition: background-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s; /* Added transform/shadow for 3D */
+            transition: background-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s; 
             text-align: left;
             width: 100%;
         }
@@ -157,22 +155,22 @@
             width: 20px;
             height: 20px;
             flex-shrink: 0;
-            fill: currentColor; /* Ensure SVG fill color changes with text */
+            fill: currentColor; 
         }
         .nav-link.active, .nav-link:hover { 
             background-color: var(--primary-button-bg); 
             color: var(--text-primary); 
-            transform: translateY(-1px); /* Slight lift on hover/active */
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow on hover/active */
+            transform: translateY(-1px); 
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); 
         }
         /* LOGOUT BUTTON SIZE REDUCTION */
         #logout-btn {
-            margin-top: auto; /* Pushes logout to the bottom */
-            padding: 0.6rem 1.2rem; /* Reduced padding */
-            font-size: 0.85rem; /* Smaller font */
+            margin-top: auto; 
+            padding: 0.6rem 1.2rem; 
+            font-size: 0.85rem; 
         }
         #logout-btn svg {
-            width: 18px; /* Smaller icon */
+            width: 18px; 
             height: 18px;
         }
         /* END LOGOUT BUTTON SIZE REDUCTION */
@@ -210,10 +208,10 @@
             border: 1px solid var(--border-color); 
             border-radius: var(--border-radius); 
             margin-bottom: 2rem; 
-            position: sticky; /* Sticky header */
+            position: sticky; 
             top: 1.5rem;
             z-index: 100;
-            box-shadow: var(--card-shadow-lift); /* 3D Lift */
+            box-shadow: var(--card-shadow-lift); 
         }
         #menu-toggle {
             background: none;
@@ -221,7 +219,7 @@
             color: var(--text-primary);
             cursor: pointer;
             padding: 0.5rem;
-            display: block; /* Visible on mobile */
+            display: block; 
         }
         #menu-toggle svg { width: 28px; height: 28px; }
         #header-title { 
@@ -240,12 +238,12 @@
             padding: 2rem; 
             border-radius: var(--border-radius); 
             margin-bottom: 2rem; 
-            box-shadow: var(--card-shadow-lift); /* Strong 3D lift */
+            box-shadow: var(--card-shadow-lift); 
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
         }
         .card-section:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 8px 8px rgba(0, 0, 0, 0.35); /* Deeper shadow on hover */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 8px 8px rgba(0, 0, 0, 0.35); 
         }
         .card-section h2, .card-section h3 { 
             margin-top: 0; 
@@ -262,7 +260,7 @@
             padding: 1.5rem; 
             border-radius: var(--border-radius); 
             border: 1px solid var(--border-color); 
-            box-shadow: var(--card-shadow-lift); /* 3D Lift */
+            box-shadow: var(--card-shadow-lift); 
         }
         .stat-card h3 { margin: 0 0 0.5rem 0; color: var(--text-secondary); font-weight: 500;}
         .stat-card .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--accent-color); }
@@ -282,13 +280,13 @@
             font-size: 1rem; 
             font-family: 'Inter', sans-serif; 
             transition: border-color 0.2s, box-shadow 0.2s; 
-            box-shadow: var(--input-shadow-inset); /* Inset shadow for 3D */
+            box-shadow: var(--input-shadow-inset); 
         }
         .form-group textarea { resize: vertical; min-height: 120px; }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { 
             outline: none; 
             border-color: var(--accent-color); 
-            box-shadow: 0 0 0 0.2rem rgba(0, 188, 212, 0.25), var(--input-shadow-inset); /* Keep inset on focus */
+            box-shadow: 0 0 0 0.2rem rgba(0, 188, 212, 0.25), var(--input-shadow-inset); 
         }
         .form-group .image-preview { 
             max-width: 100px; 
@@ -298,18 +296,18 @@
             border: 1px solid var(--border-color); 
             background-color: var(--primary-bg); 
             display: none; 
-            object-fit: contain; /* Ensure full image is visible */
-            padding: 5px; /* Add padding for aesthetics */
-            max-height: 100px; /* Limit height for previews */
+            object-fit: contain; 
+            padding: 5px; 
+            max-height: 100px; 
         }
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 1rem; }
         .data-table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
         th, td { text-align: left; padding: 1rem; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        th { background-color: #2a2a2a; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 600; cursor: pointer; } /* Sortable headers */
+        th { background-color: #2a2a2a; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; font-weight: 600; cursor: pointer; } 
         th.sortable:hover { background-color: #3a3a3a; }
-        th.sort-asc::after { content: ' \25B2'; } /* Up arrow */
-        th.sort-desc::after { content: ' \25BC'; } /* Down arrow */
+        th.sort-asc::after { content: ' \25B2'; } 
+        th.sort-desc::after { content: ' \25BC'; } 
         td img { max-width: 80px; height: auto; border-radius: 6px; background-color: var(--secondary-bg); object-fit: contain; padding: 5px;}
         td .actions { display: flex; gap: 0.75rem; }
         .truncate { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -327,16 +325,16 @@
             font-size: 0.95rem; 
             font-weight: 600; 
             text-decoration: none; 
-            box-shadow: var(--button-shadow-base); /* Raised button look */
-            transition: all 0.15s ease-out; /* Faster transition for press effect */
+            box-shadow: var(--button-shadow-base); 
+            transition: all 0.15s ease-out; 
         }
         .btn:hover { 
-            transform: translateY(0); /* Remove translateY on general hover, use :active for press */
-            box-shadow: var(--button-shadow-base); /* Keep base shadow on hover */
+            transform: translateY(0); 
+            box-shadow: var(--button-shadow-base); 
         }
         .btn:active {
-            transform: translateY(2px); /* Simulate press */
-            box-shadow: var(--button-shadow-active); /* Pressed look */
+            transform: translateY(2px); 
+            box-shadow: var(--button-shadow-active); 
         }
         
         /* Specific Button Colors/Hover */
@@ -383,7 +381,7 @@
             padding: 1.5rem;
             width: 90%;
             max-width: 400px;
-            box-shadow: var(--card-shadow-lift); /* Strong 3D lift */
+            box-shadow: var(--card-shadow-lift); 
             transform: scale(0.8);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -420,12 +418,12 @@
         #confirm-delete-btn:hover { background-color: #D93737; transform: translateY(0); }
         #confirm-cancel-btn:active, #confirm-delete-btn:active {
             transform: translateY(2px); 
-            box-shadow: var(--button-shadow-active);
+            box-shadow: var(--button-shadow-active); 
         }
         /* === END Custom Confirmation Modal Styles === */
 
         /* Rich Text Editor Styling (Quill.js) */
-        #editor-container {
+        #product-editor-container, #page-editor-container { 
             min-height: 200px;
             background-color: var(--primary-bg);
             border: 1px solid var(--border-color);
@@ -435,6 +433,7 @@
             font-size: 1rem;
             color: var(--text-primary);
         }
+        /* Toolbar styles applied to both editors */
         .ql-toolbar {
             background-color: var(--secondary-bg);
             border-top-left-radius: 6px;
@@ -470,13 +469,13 @@
         /* === Responsive Adjustments (Auto-Adjust) === */
         @media (min-width: 992px) {
             #sidebar {
-                transform: translateX(0); /* Sidebar always visible on desktop */
+                transform: translateX(0); 
             }
             #main-content {
-                margin-left: var(--sidebar-width); /* Push content over */
+                margin-left: var(--sidebar-width); 
             }
             #menu-toggle {
-                display: none; /* Hide hamburger on desktop */
+                display: none; 
             }
         }
         @media (max-width: 991px) {
@@ -489,7 +488,7 @@
             .container { padding: 1rem; }
             header { top: 1rem; }
             .card-section { padding: 1.25rem; }
-            .form-grid { grid-template-columns: 1fr; } /* Stack form fields on mobile */
+            .form-grid { grid-template-columns: 1fr; } 
             .filter-sort-bar {
                 flex-direction: column;
             }
@@ -515,9 +514,9 @@
     </div>
 
     <div id="admin-dashboard">
-        <!-- Sidebar -->
         <aside id="sidebar">
-            <div class="sidebar-header">Offers Admin</div>
+            <div class="sidebar-header">Danish Owner</div>
+            
             <nav id="view-switcher">
                 <button class="nav-link active" data-view="dashboard-view">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path></svg>
@@ -547,7 +546,6 @@
         </aside>
         <div id="sidebar-overlay"></div>
         
-        <!-- Main Content -->
         <div id="main-content">
             <div class="container">
                 <header>
@@ -558,7 +556,6 @@
                 </header>
 
                 <main>
-                    <!-- Dashboard View -->
                     <div id="dashboard-view" class="view-section active">
                         <div id="stats-grid">
                             <div class="stat-card">
@@ -580,7 +577,6 @@
                         </div>
                     </div>
 
-                    <!-- Products View -->
                     <div id="products-view" class="view-section">
                          <section class="card-section">
                             <h2>Product Editor</h2>
@@ -599,20 +595,13 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="product-current-price">Current Price (₹)</label>
-                                        <input type="number" id="product-current-price" step="0.01" required>
+                                        <input type="number" id="product-current-price" step="0.01" min="0" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="product-original-price">Original Price (₹)</label>
-                                        <input type="number" id="product-original-price" step="0.01">
+                                        <input type="number" id="product-original-price" step="0.01" min="0">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="product-rating">Rating (1-5)</label>
-                                        <input type="number" id="product-rating" min="1" max="5" step="0.1">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="button-text">Button Label</label>
-                                        <input type="text" id="button-text" placeholder="e.g., Buy Now" required>
-                                    </div>
+                                    
                                     <div class="form-group full-width">
                                         <label for="button-url">Button URL (Affiliate Link)</label>
                                         <input type="url" id="button-url" required>
@@ -624,16 +613,8 @@
                                     </div>
                                     <div class="form-group full-width">
                                         <label for="product-description">Description</label>
-                                        <textarea id="product-description" placeholder="A short description for the product, especially if it's a Deal of the Day."></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="product-expiry-date">Expiry Date</label>
-                                        <input type="date" id="product-expiry-date">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="product-expiry-time">Expiry Time</label>
-                                        <input type="time" id="product-expiry-time">
-                                    </div>
+                                        <div id="product-editor-container"></div> <input type="hidden" id="product-description-hidden"> </div>
+                                    
                                     <div class="form-group full-width">
                                         <div class="checkbox-group">
                                             <input type="checkbox" id="product-isDealOfTheDay">
@@ -661,8 +642,6 @@
                                             <th class="sortable" data-sort="name">Name</th>
                                             <th class="sortable" data-sort="category">Category</th>
                                             <th class="sortable" data-sort="currentPrice">Price</th>
-                                            <th class="sortable" data-sort="rating">Rating</th>
-                                            <th class="sortable" data-sort="expiryDate">Expiry</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -672,7 +651,6 @@
                         </section>
                     </div>
 
-                    <!-- Sliders View -->
                     <div id="sliders-view" class="view-section">
                        <section class="card-section">
                         <h2>Slider Editor</h2>
@@ -694,6 +672,13 @@
                     <section class="card-section">
                         <h3>Current Slider Images</h3>
                         <div class="filter-sort-bar">
+                            <select id="slider-page-filter">
+                                <option value="home">Page: Home</option>
+                                <option value="Offers">Page: Offers</option>
+                                <option value="Meesho">Page: Meesho</option>
+                                <option value="Amazon">Page: Amazon</option>
+                                <option value="Digistore24">Page: Digistore24</option>
+                            </select>
                             <input type="text" id="slider-search" placeholder="Search sliders...">
                         </div>
                         <div class="data-table-container">
@@ -711,7 +696,6 @@
                     </section>
                     </div>
                     
-                    <!-- Categories View -->
                     <div id="categories-view" class="view-section">
                         <section class="card-section">
                             <h2>Category Editor</h2>
@@ -720,6 +704,17 @@
                                 <div class="form-group">
                                     <label for="category-name">Category Name</label>
                                     <input type="text" id="category-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="category-page">Assign to Page</label>
+                                    <select id="category-page" required>
+                                        <option value="">Select Page</option>
+                                        <option value="home">Home</option>
+                                        <option value="Offers">Offers</option>
+                                        <option value="Meesho">Meesho</option>
+                                        <option value="Amazon">Amazon</option>
+                                        <option value="Digistore24">Digistore24</option>
+                                    </select>
                                 </div>
                                 <button type="submit" class="btn btn-accent"><span>Save Category</span></button>
                                 <button type="button" id="cancel-category-edit" class="btn btn-secondary" style="display: none;">Cancel Edit</button>
@@ -735,6 +730,7 @@
                                     <thead>
                                         <tr>
                                             <th class="sortable" data-sort="name">Name</th>
+                                            <th class="sortable" data-sort="page">Assigned Page</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -744,7 +740,6 @@
                         </section>
                     </div>
 
-                    <!-- Pages View -->
                     <div id="pages-view" class="view-section">
                         <section class="card-section">
                         <h2>Page Content Editor</h2>
@@ -759,9 +754,7 @@
                             </div>
                             <div class="form-group full-width">
                                 <label for="page-content">Page Content (HTML is allowed)</label>
-                                <div id="editor-container"></div>
-                                <input type="hidden" id="page-content-hidden"> <!-- To store Quill HTML -->
-                            </div>
+                                <div id="page-editor-container"></div> <input type="hidden" id="page-content-hidden"> </div>
                             <button type="submit" class="btn btn-accent"><span>Save Page Content</span></button>
                         </form>
                     </section>
@@ -772,7 +765,6 @@
         </div>
     </div>
     
-    <!-- NEW: Custom Confirmation Modal HTML -->
     <div id="custom-confirm-overlay">
         <div id="custom-confirm-modal">
             <p id="confirm-message">Are you sure you want to delete this item?</p>
@@ -782,13 +774,8 @@
             </div>
         </div>
     </div>
-    <!-- END NEW: Custom Confirmation Modal HTML -->
-
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <!-- Quill.js JS for Rich Text Editor -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script> <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill@1.3.6/dist/quill.js"></script>
 
     <script>
@@ -803,14 +790,14 @@
             appId: "1:79947037107:web:1dc461db53f49382a773c6"
         };
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+        const auth = firebase.auth(); // Auth back!
         const db = firebase.database();
         
         // --- DOM ELEMENTS (Updated with Custom Confirm Modal) ---
         const loginPage = document.getElementById('login-page');
-        const adminDashboard = document.getElementById('admin-dashboard');
-        const loginForm = document.getElementById('login-form');
-        const logoutBtn = document.getElementById('logout-btn');
+        const adminDashboard = document.getElementById('admin-dashboard'); 
+        const loginForm = document.getElementById('login-form'); 
+        const logoutBtn = document.getElementById('logout-btn'); 
         const viewSwitcher = document.getElementById('view-switcher');
         const viewSections = document.querySelectorAll('.view-section');
         const navLinks = document.querySelectorAll('.nav-link');
@@ -824,16 +811,17 @@
         const productNameInput = document.getElementById('product-name');
         const productImageUrlInput = document.getElementById('product-image-url');
         const productImagePreview = document.getElementById('product-image-preview');
-        const buttonTextInput = document.getElementById('button-text');
+        // const buttonTextInput = document.getElementById('button-text'); // MODIFIED: Removed
         const buttonUrlInput = document.getElementById('button-url');
         const productCategorySelect = document.getElementById('product-category');
         const currentPriceInput = document.getElementById('product-current-price');
         const originalPriceInput = document.getElementById('product-original-price');
-        const ratingInput = document.getElementById('product-rating');
-        const descriptionInput = document.getElementById('product-description');
+        // const ratingInput = document.getElementById('product-rating'); // MODIFIED: Removed
+        const productDescriptionHidden = document.getElementById('product-description-hidden'); // Hidden input for Quill HTML
         const isDealOfTheDayInput = document.getElementById('product-isDealOfTheDay');
-        const productExpiryDateInput = document.getElementById('product-expiry-date');
-        const productExpiryTimeInput = document.getElementById('product-expiry-time');
+        // MODIFIED: Removed Expiry inputs
+        // const productExpiryDateInput = document.getElementById('product-expiry-date');
+        // const productExpiryTimeInput = document.getElementById('product-expiry-time');
         const productsTbody = document.getElementById('products-tbody');
         const cancelProductEditBtn = document.getElementById('cancel-product-edit');
         const productSearchInput = document.getElementById('product-search');
@@ -847,10 +835,14 @@
         const slidersTbody = document.getElementById('sliders-tbody');
         const cancelSliderEditBtn = document.getElementById('cancel-slider-edit');
         const sliderSearchInput = document.getElementById('slider-search');
+        // MODIFIED: Added Slider Page Filter
+        const sliderPageFilter = document.getElementById('slider-page-filter');
 
         const categoryForm = document.getElementById('category-form');
         const categoryIdInput = document.getElementById('category-id');
         const categoryNameInput = document.getElementById('category-name');
+        // MODIFIED: Added Category Page input
+        const categoryPageInput = document.getElementById('category-page');
         const categoriesTbody = document.getElementById('categories-tbody');
         const cancelCategoryEditBtn = document.getElementById('cancel-category-edit');
         const categorySearchInput = document.getElementById('category-search');
@@ -864,11 +856,11 @@
         const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
         const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
-        // Quill Rich Text Editor
-        let quill;
-        const editorContainer = document.getElementById('editor-container');
-        if (editorContainer) {
-            quill = new Quill(editorContainer, {
+        // Quill Rich Text Editor for Pages
+        let pageQuill;
+        const pageEditorContainer = document.getElementById('page-editor-container');
+        if (pageEditorContainer) {
+            pageQuill = new Quill(pageEditorContainer, {
                 theme: 'snow',
                 placeholder: 'Enter page content here...',
                 modules: {
@@ -885,8 +877,30 @@
                     ]
                 }
             });
-            quill.on('text-change', () => {
-                pageContentHidden.value = quill.root.innerHTML;
+            pageQuill.on('text-change', () => {
+                pageContentHidden.value = pageQuill.root.innerHTML;
+            });
+        }
+
+        // Quill Rich Text Editor for Product Description
+        let productDescriptionQuill;
+        const productEditorContainer = document.getElementById('product-editor-container');
+        if (productEditorContainer) {
+            productDescriptionQuill = new Quill(productEditorContainer, {
+                theme: 'snow',
+                placeholder: 'A short description for the product, especially if it\'s a Deal of the Day.',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, false] }],
+                        ['bold', 'italic', 'underline'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link'],
+                        ['clean']
+                    ]
+                }
+            });
+            productDescriptionQuill.on('text-change', () => {
+                productDescriptionHidden.value = productDescriptionQuill.root.innerHTML;
             });
         }
         
@@ -958,6 +972,7 @@
                 previewEl.src = PLACEHOLDER_IMAGE_ADMIN; 
                 previewEl.style.display = 'block'; 
             };
+            updatePreview(); // Initial call to set correct state on load
         }
 
         setupImagePreviewFromUrl(productImageUrlInput, productImagePreview);
@@ -969,6 +984,8 @@
                 loginPage.style.display = 'none'; 
                 adminDashboard.style.display = 'block'; 
                 loadAllData(); 
+                // MODIFIED: Setup slider context after data load
+                setupSliderContext(); 
             } else { 
                 loginPage.style.display = 'flex'; 
                 adminDashboard.style.display = 'none'; 
@@ -980,6 +997,7 @@
               .catch(err => showToast(`Login Failed: ${err.message}`, 'error')); 
         });
         logoutBtn.addEventListener('click', () => auth.signOut());
+
 
         // --- SIDEBAR TOGGLE LOGIC ---
         function toggleSidebar() {
@@ -1005,34 +1023,74 @@
             navLinks.forEach(btn => btn.classList.toggle('active', btn.dataset.view === viewId)); 
             headerTitle.textContent = title;
 
-            if (quill) {
+            // Enable/disable Quill editors based on active view
+            if (pageQuill) {
                 if (viewId === 'pages-view') {
-                    quill.enable(true);
+                    pageQuill.enable(true);
                     loadSelectedPageContent();
                 } else {
-                    quill.enable(false);
+                    pageQuill.enable(false);
+                }
+            }
+            if (productDescriptionQuill) {
+                if (viewId === 'products-view') {
+                    productDescriptionQuill.enable(true);
+                } else {
+                    productDescriptionQuill.enable(false);
                 }
             }
         }
         
         // --- DB REFS ---
         const productsRef = db.ref('products');
-        const sliderRef = db.ref('slider');
+        // MODIFIED: Sliders ref is now the parent 'sliders' node
+        const slidersRef = db.ref('sliders'); 
         const pagesRef = db.ref('pages');
         const categoriesRef = db.ref('categories');
+        
+        // MODIFIED: Global ref for current slider page context
+        let currentSliderRef = db.ref('sliders').child('home'); // Default to 'home'
 
         // --- LOAD ALL DATA ---
         function loadAllData() {
             loadProducts(); 
-            loadSliders(); 
+            // MODIFIED: loadSliders() is now called by setupSliderContext()
+            // loadSliders(); 
             loadCategories();
             loadDashboardStats();
         }
+        
+        // --- SLIDER CONTEXT CHANGER ---
+        // MODIFIED: This function sets up the correct slider context
+        function setupSliderContext() {
+            // Detach old listener if it exists
+            if (window.currentSliderListener) {
+                window.currentSliderListener.off();
+            }
+            
+            const pageName = sliderPageFilter.value;
+            currentSliderRef = db.ref('sliders').child(pageName);
+            
+            // Attach new listener and store it
+            window.currentSliderListener = currentSliderRef;
+            loadSliders(); // This will now use the correct ref
+        }
+        
+        // MODIFIED: Add listener to the page filter
+        sliderPageFilter.addEventListener('change', setupSliderContext);
+
 
         // --- DASHBOARD STATS ---
         function loadDashboardStats() { 
             productsRef.on('value', snap => { document.getElementById('total-products').textContent = snap.numChildren(); }); 
-            sliderRef.on('value', snap => { document.getElementById('total-sliders').textContent = snap.numChildren(); }); 
+            // MODIFIED: Count sliders from the parent node (this is a bit tricky, might need adjustment)
+            slidersRef.on('value', snap => { 
+                let total = 0;
+                snap.forEach(pageSnap => {
+                    total += pageSnap.numChildren();
+                });
+                document.getElementById('total-sliders').textContent = total; 
+            }); 
             categoriesRef.on('value', snap => { document.getElementById('total-categories').textContent = snap.numChildren(); });
             pagesRef.on('value', snap => { document.getElementById('total-pages').textContent = snap.numChildren(); });
         }
@@ -1047,19 +1105,20 @@
                 showToast('Please provide an image URL for the product.', 'error');
                 return;
             }
+            // MODIFIED: Removed unused fields
             const productData = { 
                 name: productNameInput.value.trim(), 
                 image: imageUrl, 
-                buttonText: buttonTextInput.value.trim(), 
+                // buttonText: buttonTextInput.value.trim(), // Removed
                 buttonUrl: buttonUrlInput.value.trim(), 
                 category: productCategorySelect.value, 
                 currentPrice: parseFloat(currentPriceInput.value) || 0, 
                 originalPrice: parseFloat(originalPriceInput.value) || 0, 
-                rating: parseFloat(ratingInput.value) || 0, 
-                description: descriptionInput.value.trim(), 
+                // rating: parseFloat(ratingInput.value) || 0, // Removed
+                description: productDescriptionHidden.value.trim(), // Get HTML from hidden input
                 isDealOfTheDay: isDealOfTheDayInput.checked, 
-                expiryDate: productExpiryDateInput.value || null,
-                expiryTime: productExpiryTimeInput.value || null,
+                // expiryDate: productExpiryDateInput.value || null, // Removed
+                // expiryTime: productExpiryTimeInput.value || null, // Removed
             }; 
             const productId = productIdInput.value; 
             
@@ -1131,13 +1190,10 @@
                     let valA = a[currentProductSortColumn];
                     let valB = b[currentProductSortColumn];
 
-                    if (['currentPrice', 'originalPrice', 'rating'].includes(currentProductSortColumn)) {
+                    // MODIFIED: Removed rating and expiry from sort logic
+                    if (['currentPrice', 'originalPrice'].includes(currentProductSortColumn)) {
                         valA = parseFloat(valA) || 0;
                         valB = parseFloat(valB) || 0;
-                    }
-                    if (currentProductSortColumn === 'expiryDate') {
-                        valA = valA ? new Date(valA + (a.expiryTime ? 'T' + a.expiryTime : '')) : new Date(0); 
-                        valB = valB ? new Date(valB + (b.expiryTime ? 'T' + b.expiryTime : '')) : new Date(0);
                     } else if (typeof valA === 'string') {
                         valA = valA.toLowerCase();
                         valB = valB.toLowerCase();
@@ -1150,21 +1206,23 @@
             }
 
             if (filtered.length === 0) {
-                productsTbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No products found matching criteria.</td></tr>`;
+                // MODIFIED: Colspan changed from 7 to 5
+                productsTbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No products found matching criteria.</td></tr>`;
                 return;
             }
 
             filtered.forEach(p => { 
                 const id = p.id; 
-                const escapedProduct = JSON.stringify(p).replace(/'/g, "\\'"); 
+                // Ensure description is safe for JSON if it contains quotes
+                const escapedDescription = (p.description || '').replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                const escapedProduct = JSON.stringify({ ...p, description: escapedDescription }).replace(/'/g, "\\'"); 
                 const tr = document.createElement('tr'); 
+                // MODIFIED: Removed rating and expiry cells
                 tr.innerHTML = `
                     <td><img src="${p.image || PLACEHOLDER_IMAGE_ADMIN}" alt="${p.name}" onerror="this.src='${PLACEHOLDER_IMAGE_ADMIN}';"></td>
                     <td>${p.name} ${p.isDealOfTheDay ? '⭐' : ''}</td>
                     <td>${p.category || 'N/A'}</td>
                     <td>₹${p.currentPrice ? p.currentPrice.toLocaleString('en-IN') : 'N/A'}</td>
-                    <td>${p.rating ? p.rating.toFixed(1) : 'N/A'}</td>
-                    <td>${p.expiryDate ? p.expiryDate + (p.expiryTime ? ' ' + p.expiryTime : '') : 'N/A'}</td>
                     <td class="actions">
                         <button class="btn btn-primary btn-icon" title="Edit" onclick='editProduct("${id}", ${escapedProduct})'>${editIcon}</button>
                         <button class="btn btn-danger btn-icon" title="Delete" onclick="deleteProduct('${id}')">${deleteIcon}</button>
@@ -1186,18 +1244,20 @@
             productIdInput.value = id; 
             productNameInput.value = p.name || ''; 
             productImageUrlInput.value = p.image || '';
-            const event = new Event('input');
-            productImageUrlInput.dispatchEvent(event);
-            buttonTextInput.value = p.buttonText || ''; 
+            productImageUrlInput.dispatchEvent(new Event('input')); // Trigger preview update
+            // buttonTextInput.value = p.buttonText || ''; // Removed
             buttonUrlInput.value = p.buttonUrl || ''; 
             productCategorySelect.value = p.category || ''; 
             currentPriceInput.value = p.currentPrice || ''; 
             originalPriceInput.value = p.originalPrice || ''; 
-            ratingInput.value = p.rating || ''; 
-            descriptionInput.value = p.description || ''; 
+            // ratingInput.value = p.rating || ''; // Removed
+            if (productDescriptionQuill) {
+                productDescriptionQuill.root.innerHTML = p.description || ''; // Set Quill content
+                productDescriptionHidden.value = p.description || '';
+            }
             isDealOfTheDayInput.checked = p.isDealOfTheDay || false; 
-            productExpiryDateInput.value = p.expiryDate || '';
-            productExpiryTimeInput.value = p.expiryTime || '';
+            // productExpiryDateInput.value = p.expiryDate || ''; // Removed
+            // productExpiryTimeInput.value = p.expiryTime || ''; // Removed
             cancelProductEditBtn.style.display = 'inline-block'; 
             showView('products-view', 'Manage Products'); 
             productForm.scrollIntoView({ behavior: 'smooth' }); 
@@ -1214,9 +1274,13 @@
         function resetProductForm() { 
             productForm.reset(); 
             productIdInput.value = ''; 
-            productImagePreview.style.display = 'none'; 
+            productImageUrlInput.dispatchEvent(new Event('input')); // Reset preview
             cancelProductEditBtn.style.display = 'none'; 
             productCategorySelect.value = ''; 
+            if (productDescriptionQuill) {
+                productDescriptionQuill.root.innerHTML = ''; // Clear Quill content
+                productDescriptionHidden.value = '';
+            }
         }
         cancelProductEditBtn.addEventListener('click', resetProductForm);
         
@@ -1235,7 +1299,10 @@
                 url: sliderUrlInput.value.trim() 
             }; 
             const sliderId = sliderIdInput.value; 
-            const op = sliderId ? sliderRef.child(sliderId).update(sliderData) : sliderRef.push(sliderData); 
+            
+            // MODIFIED: Use the global currentSliderRef
+            const op = sliderId ? currentSliderRef.child(sliderId).update(sliderData) : currentSliderRef.push(sliderData); 
+            
             op.then(() => { 
                 showToast(`Slide ${sliderId ? 'updated' : 'added'}!`); 
                 resetSliderForm(); 
@@ -1284,7 +1351,7 @@
             }
 
             if (filtered.length === 0) {
-                slidersTbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No sliders found matching criteria.</td></tr>`;
+                slidersTbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No sliders found for this page.</td></tr>`;
                 return;
             }
 
@@ -1302,8 +1369,9 @@
             }); 
         }
 
+        // MODIFIED: Listens to the global currentSliderRef
         function loadSliders() { 
-            sliderRef.on('value', snapshot => { 
+            currentSliderRef.on('value', snapshot => { 
                 const slidersObj = snapshot.val();
                 currentSlidersData = slidersObj ? Object.keys(slidersObj).map(key => ({ ...slidersObj[key], id: key })) : [];
                 renderSlidersTable(currentSlidersData);
@@ -1313,8 +1381,7 @@
         window.editSlider = (id, image, url) => { 
             sliderIdInput.value = id; 
             sliderImageUrlInput.value = image; 
-            const event = new Event('input');
-            sliderImageUrlInput.dispatchEvent(event);
+            sliderImageUrlInput.dispatchEvent(new Event('input')); // Trigger preview update
             sliderUrlInput.value = url; 
             cancelSliderEditBtn.style.display = 'inline-block'; 
             showView('sliders-view', 'Manage Sliders'); 
@@ -1323,7 +1390,8 @@
         
         window.deleteSlider = (id) => { 
             showCustomConfirm('Are you sure you want to delete this slide?', () => {
-                sliderRef.child(id).remove()
+                // MODIFIED: Uses the global currentSliderRef
+                currentSliderRef.child(id).remove()
                     .then(() => showToast('Slide deleted.'))
                     .catch(err => showToast(`Error: ${err.message}`, 'error')); 
             });
@@ -1332,7 +1400,7 @@
         function resetSliderForm() { 
             sliderForm.reset(); 
             sliderIdInput.value = ''; 
-            sliderImagePreview.style.display = 'none'; 
+            sliderImageUrlInput.dispatchEvent(new Event('input')); // Reset preview
             cancelSliderEditBtn.style.display = 'none'; 
         }
         cancelSliderEditBtn.addEventListener('click', resetSliderForm);
@@ -1342,8 +1410,10 @@
 
         categoryForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            // MODIFIED: Added 'page' to data
             const categoryData = {
-                name: categoryNameInput.value.trim()
+                name: categoryNameInput.value.trim(),
+                page: categoryPageInput.value
             };
             const categoryId = categoryIdInput.value;
             const op = categoryId ? categoriesRef.child(categoryId).update(categoryData) : categoriesRef.push(categoryData);
@@ -1396,17 +1466,20 @@
             }
 
             if (filtered.length === 0) {
-                categoriesTbody.innerHTML = `<tr><td colspan="2" style="text-align:center;">No categories found matching criteria.</td></tr>`;
+                // MODIFIED: Colspan changed to 3
+                categoriesTbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No categories found matching criteria.</td></tr>`;
                 return;
             }
 
             filtered.forEach(c => {
                 const id = c.id;
                 const tr = document.createElement('tr');
+                // MODIFIED: Added page cell and page to edit function
                 tr.innerHTML = `
                     <td>${c.name}</td>
+                    <td>${c.page || 'N/A'}</td>
                     <td class="actions">
-                        <button class="btn btn-primary btn-icon" title="Edit" onclick="editCategory('${id}', '${c.name}')">${editIcon}</button>
+                        <button class="btn btn-primary btn-icon" title="Edit" onclick="editCategory('${id}', '${c.name}', '${c.page || ''}')">${editIcon}</button>
                         <button class="btn btn-danger btn-icon" title="Delete" onclick="deleteCategory('${id}')">${deleteIcon}</button>
                     </td>`;
                 categoriesTbody.appendChild(tr);
@@ -1427,7 +1500,8 @@
                 
                 sortedCategories.forEach(cat => {
                     const option1 = document.createElement('option');
-                    option1.value = cat.name;
+                    // MODIFIED: Value is now the name, not ID. This matches user panel logic.
+                    option1.value = cat.name; 
                     option1.textContent = cat.name;
                     productCategorySelect.appendChild(option1);
 
@@ -1439,9 +1513,11 @@
             });
         }
 
-        window.editCategory = (id, name) => {
+        // MODIFIED: Added 'page' parameter
+        window.editCategory = (id, name, page) => {
             categoryIdInput.value = id;
             categoryNameInput.value = name;
+            categoryPageInput.value = page || ''; // Set page value
             cancelCategoryEditBtn.style.display = 'inline-block';
             showView('categories-view', 'Manage Categories');
             categoryForm.scrollIntoView({ behavior: 'smooth' });
@@ -1458,6 +1534,7 @@
         function resetCategoryForm() {
             categoryForm.reset();
             categoryIdInput.value = '';
+            categoryPageInput.value = ''; // Reset page
             cancelCategoryEditBtn.style.display = 'none';
         }
         cancelCategoryEditBtn.addEventListener('click', resetCategoryForm);
@@ -1473,9 +1550,9 @@
             const selectedPage = pageSelect.value; 
             if (selectedPage) { 
                 pagesRef.child(selectedPage).child('content').once('value', snapshot => { 
-                    if (quill) {
-                        quill.root.innerHTML = snapshot.val() || ''; 
-                        pageContentHidden.value = quill.root.innerHTML;
+                    if (pageQuill) {
+                        pageQuill.root.innerHTML = snapshot.val() || ''; 
+                        pageContentHidden.value = pageQuill.root.innerHTML;
                     }
                 }); 
             } 
@@ -1494,4 +1571,4 @@
         
     </script>
 </body>
-</html>
+    </html>
