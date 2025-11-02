@@ -9,1663 +9,1492 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Deals Hub">
-    <meta name="theme-color" content="#1F618D">
+    <meta name="theme-color" content="#131921">
     <style>
-        /* === BASE STYLES & FONTS === */
+        /* === BASE STYLES & NEW FONTS === */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        @import url('https://fonts.googleapis.com/css?family=Georgia&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Poppins:wght@600;700&display=swap'); /* MODIFIED: Added 900 weight */
 
         :root {
-            /* === COLOR UPDATE: DARK BLACK & WHITE THEME (Light Mode ONLY) === */
-            --bg-color: #f0f0f0; /* Light Gray/White Background (Fixed to Light Mode) */
-            --text-color: #1a1a1a; /* Dark Black Text */
-            --card-bg: #ffffff;
+            /* === AMAZON-INSPIRED COLOR PALETTE === */
+            --amazon-blue-dark: #131921;
+            --amazon-blue-light: #232F3E;
+            --amazon-orange: #FF9900;
+            --amazon-orange-darker: #F08804;
+            --amazon-background-grey: #EAEDED;
+            --amazon-text-dark: #0F1111;
+            --amazon-text-light: #FFFFFF;
+            --amazon-text-secondary: #555555;
+            --amazon-border-color: #DDDDDD;
+            --amazon-card-bg: #FFFFFF;
+            --amazon-button-secondary-bg: #F0F2F2;
+            --amazon-button-secondary-border: #ADB1B8;
+            --amazon-error-red: #C40000;
+            --success-green: #067D62;
+            --silver-background: #F8F9FA;
             
-            /* === NEW 3D SHADOWS (Stronger lift/layers) === */
-            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.25), 0 6px 6px rgba(0, 0, 0, 0.15); /* Pronounced Lift */
-            --button-shadow-base: inset 0 -4px 0 rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.3); /* Raised Look */
-            --button-shadow-active: inset 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.1); /* Pressed Look */
+            /* Mapping to existing variables for easier integration */
+            --bg-color: var(--amazon-background-grey);
+            --text-color: var(--amazon-text-dark);
+            --card-bg: var(--amazon-card-bg);
+            --border-color: var(--border-color);
+            --primary-accent: var(--amazon-orange);
+            --buy-button-color: var(--amazon-orange);
+            --detail-button-color: var(--amazon-button-secondary-bg);
+            --secondary-text-color: var(--amazon-text-secondary);
             
-            /* === ICON UPDATE: DARK BLUE AND 3D SHADOW === */
-            --primary-accent: #1F618D; /* CHANGED TO DARK BLUE */
-            --icon-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4); /* DECREASED Shadow for smaller icons */
-            
-            /* === BUTTON COLOR CHANGE: BUY NOW TO GREEN === */
-            --buy-button-color: #27AE60; /* Solid Green for Buy Now */
-            --detail-button-color: #E74C3C; /* Solid Red for Details */
-            --button-gradient: linear-gradient(135deg, var(--buy-button-color) 0%, #34CC70 100%); /* Green Gradient for Text/Title */
-            --border-color: #cccccc; /* Lighter Border */
-            --secondary-text-color: #666666;
-            --user-sidebar-width: 260px;
-
-            /* Removed Auth Modal Colors - keeping for compatibility if styles are reused */
-            --auth-modal-bg: #ffffff;
-            --auth-input-bg: #f9f9f9;
-            --auth-input-border: #ddd;
-            --auth-button-primary: #1F618D;
-            --auth-button-secondary: #ccc;
-            --auth-text-color: #333;
-            --auth-error-color: #e74c3c;
+            --card-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            --user-sidebar-width: 280px;
         }
         
         body { 
-            font-family: 'Georgia', serif; 
+            font-family: 'Inter', 'Amazon Ember', Arial, sans-serif;
             background-color: var(--bg-color); 
             color: var(--text-color); 
-            transition: background-color 0.3s, color 0.3s; 
-            padding-bottom: 50px; 
-            -webkit-user-select: none; user-select: none;
             display: flex; 
             flex-direction: column; 
-            min-height: 100vh; 
+            min-height: 100vh;
+            padding-bottom: 70px;
+            font-variant: small-caps;
+            /* MODIFIED: Disables text selection/copy */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         .main-content {
             flex-grow: 1;
         }
 
-        /* DESIGN IMPROVEMENT: Slightly deeper header background */
+        /* === AMAZON-INSPIRED HEADER === */
         header { 
-            background: #1a1a1a; /* Solid Dark Black Header */ 
-            color: white; 
-            padding: 10px 0; 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+            background: var(--amazon-blue-dark); 
+            color: var(--amazon-text-light); 
+            padding: 8px 0;
             position: sticky; 
             top: 0; 
             z-index: 999; 
             flex-shrink: 0;
         }
-        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-        
-        /* === 1. UPDATED: "Daily" Text to Light Blue === */
-        .logo { 
-            font-size: 20px; 
-            font-weight: 300; 
-            color: #add8e6; /* Light Blue/Sky Blue */
-            text-decoration: none; flex-shrink: 0; 
+        .header-content { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 0 15px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 15px; 
         }
-        .logo span { color: white; }
-        /* === END UPDATED "Daily" Text === */
         
-        /* === SEARCH BAR STYLE (Black in All Modes) === */
+        .logo { 
+            font-family: 'Poppins', sans-serif;
+            font-size: 26px; 
+            font-weight: 700;
+            color: var(--amazon-text-light); 
+            text-decoration: none; 
+            flex-shrink: 0;
+            padding: 5px;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .logo:hover {
+            border-color: var(--amazon-text-light);
+        }
+        .logo span { 
+            color: var(--amazon-orange);
+        }
+        
+        /* === AMAZON-STYLE SEARCH BAR === */
         .search-container {
             position: relative;
             flex-grow: 1;
-            max-width: 600px;
+            max-width: 800px;
             display: flex;
             align-items: center;
         }
         #searchInput {
-            display: block !important;
             flex-grow: 1;
-            padding: 10px 40px 10px 15px; /* Added padding-right for clear button */
-            border: 1px solid #444; 
-            border-radius: 25px;
-            background: #333333; 
-            color: white;
-            font-size: 16px;
-            font-weight: 600; 
-            transition: all 0.3s;
+            padding: 10px 15px;
+            border: 2px solid var(--amazon-orange);
+            border-radius: 5px 0 0 5px;
+            background: var(--amazon-text-light);
+            color: var(--text-color);
+            font-size: 15px;
+            font-weight: 500; /* MODIFIED: Was 400, changed to 500 for bolder text */
+            transition: all 0.2s ease-in-out;
+            outline: none;
+            height: 44px;
+            /* MODIFIED: Re-enable user selection for input fields */
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
         }
-        #searchInput::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        /* UNIQUE FOCUS GLOW AND INNER SHADOW (MODIFIED: Background remains black/dark) */
         #searchInput:focus {
-            background: #333333; /* Kept dark/black */
-            color: white; /* Kept white for contrast */
-            box-shadow: 0 0 10px var(--primary-accent), inset 0 0 5px rgba(0, 0, 0, 0.3); 
-            border-color: transparent;
+            box-shadow: 0 0 0 2px var(--amazon-orange), 0 0 5px rgba(255, 153, 0, 0.5);
         }
         #clearSearchBtn {
             position: absolute;
-            right: 10px;
+            right: 65px;
+            top: 50%;
+            transform: translateY(-50%);
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--secondary-text-color);
             cursor: pointer;
-            font-size: 18px;
-            display: none; /* Hidden by default */
+            font-size: 22px;
+            display: none;
+            transition: color 0.2s;
+            z-index: 5;
+            padding: 5px;
         }
-        #searchInput:not(:placeholder-shown) + #clearSearchBtn {
-            display: block; /* Show when input is not empty */
+        .search-button {
+            background: var(--primary-accent);
+            border: 1px solid var(--primary-accent);
+            border-radius: 0 5px 5px 0;
+            width: 50px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
         }
-        #searchInput:focus + #clearSearchBtn {
-             color: white; /* Kept white for contrast on dark background */
+        .search-button:hover {
+            background: var(--amazon-orange-darker);
+            border-color: var(--amazon-orange-darker);
         }
-        /* === END SEARCH BAR STYLE === */
-        
-        .theme-toggle { 
-            border: none; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            transition: all 0.3s; 
-            flex-shrink: 0; 
+        .search-button svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--amazon-blue-dark);
         }
 
-        /* === 1. UPDATED: Header Menu Toggle (Hamburger Icon) to Light Look === */
         #headerMenuToggle {
-             width: 45px; 
-             height: 45px; 
-             border-radius: 8px; 
-             background: #ffffff; /* NEW: White/Light Background */
-             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle Lift */
-             border: 1px solid var(--primary-accent); /* Dark Blue Border */
+             background: transparent;
+             border: 1px solid transparent;
+             border-radius: 3px;
+             padding: 8px;
+             cursor: pointer;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             transition: background-color 0.2s, border-color 0.2s;
+             flex-shrink: 0; /* Ensures button doesn't get squashed */
         }
         #headerMenuToggle:hover {
-             background: var(--bg-color); /* Slight hover effect */
-             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); 
-             transform: translateY(-1px); 
-        }
-        #headerMenuToggle:active {
-             transform: translateY(1px);
-             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+             border-color: var(--amazon-text-light);
+             background-color: rgba(255, 255, 255, 0.1);
         }
         #headerMenuToggle svg {
-             width: 25px; 
-             height: 25px; 
-             fill: var(--primary-accent) !important; /* Force Dark Blue for visibility on White Background */
-        }
-        /* === END UPDATED HEADER MENU TOGGLE === */
-
-        /* Added cart and user buttons */
-        .header-action-button {
-            background: #ffffff;
-            border: 1px solid var(--primary-accent);
-            border-radius: 8px;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            transition: all 0.2s;
-            position: relative;
-            flex-shrink: 0;
-        }
-        .header-action-button:hover {
-            background: var(--bg-color);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-            transform: translateY(-1px);
-        }
-        .header-action-button svg {
-            width: 25px;
-            height: 25px;
-            fill: var(--primary-accent);
-        }
-        #favsItemCount { /* Changed from #cartItemCount */
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background-color: var(--detail-button-color);
-            color: white;
-            border-radius: 50%;
-            padding: 2px 7px;
-            font-size: 12px;
-            font-weight: 700;
-            min-width: 24px;
-            text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+             width: 28px; 
+             height: 28px; 
+             fill: var(--amazon-text-light); 
         }
         
-        .section-container { max-width: 1400px; margin: 30px auto 0; padding: 0 20px; }
-        .section-header { text-align: center; margin-bottom: 40px; }
-        .section-header-title-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; } /* Gap reduced */
-        /* === 2. UPDATED: Section Title ICON Size Reduced === */
-        .section-header-title-wrapper .icon { 
-            width: 28px; /* Reduced from 32px */
-            height: 28px; /* Reduced from 32px */
-            fill: var(--primary-accent); 
-            filter: drop-shadow(var(--icon-shadow)); 
-        }
-        .section-title { font-size: 36px; font-weight: 700; background: var(--button-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-variant: small-caps; letter-spacing: 1px; }
-        .section-subtitle { font-size: 18px; color: var(--secondary-text-color); font-weight: 400; }
-        /* === END UPDATED ICON SIZE === */
+        /* MODIFIED: Reduced margin */
+        .section-container { max-width: 1400px; margin: 20px auto 20px; padding: 0 20px; }
         
-        .slider-container { margin-top: 20px; }
-        .slider { position: relative; width: 100%; height: 450px; border-radius: 12px; overflow: hidden; box-shadow: var(--card-shadow); background: var(--card-bg); }
+        .section-title { 
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px; /* MODIFIED: Was 28px */
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 15px; /* MODIFIED: Was 20px */
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        /* === SLIDER === */
+        .slider-container { display: none; }
+        .slider { 
+            position: relative; width: 100%; height: 350px;
+            border-radius: 8px; overflow: hidden; box-shadow: var(--card-shadow);
+            background: var(--card-bg); 
+        }
         .slider-wrapper { display: flex; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); height: 100%; }
-        .slide { min-width: 100%; height: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; background: var(--card-bg); position: relative; }
-        .slide img { width: 100%; height: 100%; object-fit: contain; padding: 20px; }
-        
-        .slider-nav { display: none; }
-
+        .slide { 
+            min-width: 100%; height: 100%; cursor: pointer; display: flex; 
+            align-items: center; justify-content: center; background: var(--bg-color); 
+        }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
         .slider-dots { 
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); 
-            display: flex; gap: 12px; 
-            background: rgba(0, 0, 0, 0.3); 
-            padding: 10px 20px; 
-            border-radius: 25px; 
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); 
+            display: flex; gap: 8px; 
         }
-        .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); cursor: pointer; transition: all 0.3s; }
-        .dot.active { background: var(--primary-accent); width: 35px; border-radius: 6px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(0,0,0,0.2); cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: var(--primary-accent); border-color: var(--amazon-blue-dark); }
         
-        /* === NEW DEAL OF THE DAY DESIGN STARTS HERE === */
+        /* === DEAL OF THE DAY - (Vertical Card Design) === */
         .deal-of-the-day-card { 
-            background: var(--card-bg); 
-            border-radius: 15px; 
-            padding: 20px; 
-            box-shadow: var(--card-shadow); 
-            display: grid; 
-            gap: 20px; 
-            align-items: center; 
-            border: 2px solid var(--primary-accent); 
-            margin-top: 50px; 
+            background: var(--card-bg); border-radius: 8px; padding: 20px;
+            box-shadow: var(--card-shadow); display: grid; gap: 20px;
+            align-items: center; border: 1px solid var(--border-color);
+            margin-top: 20px; position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            max-width: 400px; /* Limits width */
+            margin-left: auto; /* Centers it */
+            margin-right: auto; /* Centers it */
         }
-        
+        .deal-of-the-day-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
         .deal-image-wrapper { 
-            width: 100%; 
-            height: 300px;
-            background: var(--card-bg);
-            border-radius: 12px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden; 
-            position: relative;
+            width: 100%; height: 280px; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; 
+            overflow: hidden; position: relative; background: #fff;
         }
+        .deal-image-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .deal-badge {
+            /* position: absolute; top: 12px; left: 12px; */ /* MODIFIED: Removed position absolute */
+            background: #CC0C39; color: white; padding: 5px 12px;
+            border-radius: 5px; font-size: 13px; font-weight: 700;
+            display: inline-block; /* MODIFIED: Added */
+            margin-bottom: 12px; /* MODIFIED: Added */
+        }
+        .deal-info h3 { 
+            font-family: 'Poppins', sans-serif; font-size: 24px; 
+            font-weight: 600; margin-bottom: 8px; 
+        }
+        .deal-info .deal-description { font-size: 15px; line-height: 1.6; margin-bottom: 18px; color: var(--text-color);}
         
-        .deal-image-wrapper img {
-            max-width: 100%; 
-            max-height: 100%; 
-            object-fit: contain; 
-            padding: 15px;
+        .deal-of-the-day-card .deal-pricing { margin-bottom: 20px; }
+        .deal-of-the-day-card .deal-pricing .price-row { 
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap; 
         }
+        .deal-of-the-day-card .deal-pricing .current-price { font-size: 28px; font-weight: 500; color: #B12704; }
+        .deal-of-the-day-card .deal-pricing .original-price { font-size: 16px; text-decoration: line-through; color: var(--secondary-text-color); }
+        
+        .deal-actions { display: flex; gap: 12px; margin-top: auto; width: 100%; }
+        .action-button {
+            flex: 1; padding: 12px 18px; font-size: 15px; font-weight: 700;
+            border-radius: 8px; cursor: pointer; text-align: center;
+            transition: all 0.2s ease; border: 1px solid;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .action-button.buy-button {
+            color: var(--amazon-text-dark); border-color: #a88734;
+            background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+            box-shadow: 0 1px 0 rgba(255,255,255,.4) inset;
+        }
+        .action-button.buy-button:hover { background: linear-gradient(to bottom, #f5d78e, #eeb933); border-color: #a27a2a; }
+        .action-button.detail-button {
+            color: var(--amazon-text-dark); border-color: var(--amazon-button-secondary-border);
+            background: var(--amazon-button-secondary-bg);
+            box-shadow: 0 1px 0 rgba(255,255,255,.6) inset;
+        }
+        .action-button.detail-button:hover { background: #E3E6E6; }
 
-        .deal-info h3 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
         
-        .deal-info .deal-category { 
-            font-family: 'Roboto', sans-serif;
-            font-size: 16px; 
-            color: var(--primary-accent);
-            font-weight: 700; 
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .deal-info .deal-description { font-size: 15px; line-height: 1.6; margin-bottom: 20px; color: var(--secondary-text-color);}
-        
-        .deal-of-the-day-card .product-pricing {
-            display: flex; 
-            align-items: center;
-            gap: 15px; 
-            margin-bottom: 25px; 
-            justify-content: flex-start;
-            flex-wrap: wrap; /* Allows wrapping on small screens */
-        }
-        
-        .deal-of-the-day-card .product-pricing .current-price { 
-            font-size: 34px;
-            font-weight: 800; 
-            color: var(--buy-button-color); 
-        }
-
-        .deal-of-the-day-card .product-pricing .original-price { 
-            font-size: 18px;
-        }
-        
-        .deal-of-the-day-card .product-pricing .discount-badge {
-            font-size: 14px; 
-            padding: 4px 9px;
-        }
-
-        .deal-expiry-badge {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background: #FF5722;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 700;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            font-variant: small-caps;
-            z-index: 10;
-        }
-        
-        /* NEW: Button container for equal-sized buttons */
-        .deal-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: auto; /* Pushes buttons to the bottom */
-        }
-        .deal-actions .btn {
-            flex: 1; /* This makes both buttons take equal width */
-            padding: 12px 15px;
-            font-size: 15px;
-            font-weight: 700;
-            border-radius: 30px;
-            color: white;
-            border: none;
-            cursor: pointer;
-            text-align: center;
-            box-shadow: var(--button-shadow-base);
-            transition: all 0.15s ease-out;
-        }
-        .deal-actions .btn.detail-button {
-            background: var(--detail-button-color);
-        }
-        .deal-actions .btn.buy-button {
-            background: var(--buy-button-color);
-        }
-        .deal-actions .btn:hover {
-            transform: translateY(2px);
-            box-shadow: var(--button-shadow-active);
-        }
-        .deal-actions .btn.detail-button:hover { background: #C0392B; }
-        .deal-actions .btn.buy-button:hover { background: #219653; }
-
-        /* Desktop layout for Deal of the Day */
-        @media (min-width: 769px) {
-            .deal-of-the-day-card {
-                grid-template-columns: 400px 1fr; /* Image on left, info on right */
-                gap: 40px;
-                padding: 30px;
-            }
-            .deal-image-wrapper {
-                height: 100%; /* Full height of the card */
-                min-height: 350px;
-            }
-            .deal-info {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-        }
-        /* === NEW DEAL OF THE DAY DESIGN ENDS HERE === */
-        
+        /* === FILTERS (CUSTOM) === */
         #filterSelects {
-            display: flex; 
-            gap: 25px; 
-            flex-wrap: nowrap; 
-            justify-content: space-between; 
-            margin: 40px 0;
+            display: flex; gap: 15px; flex-wrap: wrap; 
+            justify-content: flex-start; 
+            margin: 20px 0; /* Reduced margin */
+        }
+        .custom-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            font-size: 15px;
+            border: 1px solid var(--amazon-button-secondary-border);
+            background: var(--amazon-button-secondary-bg);
+            color: var(--text-color);
+            border-radius: 8px;
             width: 100%;
-        }
-        #filterSelects .sort-filter {
+            box-shadow: 0 1px 0 rgba(255,255,255,.6) inset;
+            cursor: pointer;
+            text-align: left;
             flex-grow: 1;
-            flex-basis: calc(50% - 12.5px); 
-            max-width: 50%; 
+            min-width: 200px;
+            font-weight: 700; /* MODIFIED: Added bold */
         }
-        
-        .sort-filter { 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; /* Gap reduced */
-            justify-content: flex-start;
+        .custom-select-trigger svg.icon {
+             width: 22px; height: 22px; fill: var(--secondary-text-color); margin-right: 8px;
         }
-        .sort-filter svg { 
-            width: 18px; /* Reduced from 22px */
-            height: 18px; /* Reduced from 22px */
-            fill: var(--primary-accent); 
-            opacity: 1; 
-            filter: drop-shadow(var(--icon-shadow)); 
-            flex-shrink: 0; 
+        .custom-select-trigger::after {
+            content: '';
+            border: solid var(--secondary-text-color);
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 3px;
+            transform: rotate(45deg);
+            margin-left: 10px;
         }
 
-        .sort-filter select { 
-            padding: 10px 15px; 
-            font-size: 16px; 
-            border: 1px solid var(--border-color); 
-            background: var(--card-bg); 
-            color: var(--text-color); 
-            border-radius: 8px; 
-            appearance: none; 
-            -webkit-appearance: none; 
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%231a1a1a' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3csvg>"); 
-            background-position: right 10px center; 
-            background-repeat: no-repeat; 
-            background-size: 1.5em; 
-            padding-right: 40px; 
-            font-family: 'Roboto', sans-serif; 
-            font-weight: 700; 
-            font-variant: small-caps; 
-            width: 100%; 
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); 
-            transition: box-shadow 0.2s;
+        /* === IMPROVED PRODUCT CARD UI/UX === */
+        .products-grid { 
+            display: grid; 
+            /* MODIFIED: Mobile-first 2-column layout */
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; 
         }
-        .sort-filter select:hover {
-            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.2);
-        }
-        .sort-filter select:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(31, 97, 141, 0.5), inset 0 1px 3px rgba(0, 0, 0, 0.1); 
-        }
-        .sort-filter select option {
-            font-family: 'Oswald', sans-serif; 
-            font-weight: 700; 
-            font-style: italic; 
-            font-variant: small-caps;
-            color: #E65100; 
-            font-size: 18px; 
-            padding: 8px 15px; 
-            background-color: var(--card-bg); 
-        }
-
-        /* === Smaller product cards === */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         .product-card { 
-            background: var(--card-bg); 
-            border-radius: 15px; 
-            padding: 15px; 
-            box-shadow: var(--card-shadow); 
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-            display: flex; 
-            flex-direction: column; 
-            border: 2px solid transparent; 
-            position: relative; 
-            cursor: default; 
+            background: var(--card-bg); border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out; 
+            display: flex; flex-direction: column; 
+            position: relative; overflow: hidden;
         }
         .product-card:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 8px 8px rgba(0, 0, 0, 0.25); 
-            border-color: var(--primary-accent); 
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+            border-color: var(--primary-accent);
         } 
-        
-        .favorite-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            border: none;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 5;
-            transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
-        }
-        .favorite-toggle:hover { background: rgba(255, 255, 255, 1); transform: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); }
-        .favorite-toggle svg { 
-            width: 18px;
-            height: 18px;
-            fill: #7f8c8d; 
-            transition: fill 0.2s, stroke 0.2s; 
-            filter: drop-shadow(0 0.5px 0.5px rgba(0, 0, 0, 0.3));
-        }
-        .favorite-toggle.liked svg { fill: #e74c3c; stroke: #e74c3c; stroke-width: 1; }
-
+        .product-card-content { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
         .product-image-wrapper { 
-            width: 100%; 
-            height: 160px; 
-            background: var(--card-bg);
-            border-radius: 10px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            margin-bottom: 10px; 
-            overflow: hidden; 
-            position: relative; 
+            width: 100%; height: 180px; background: #FFF;
+            margin-bottom: 12px; overflow: hidden; 
+            position: relative; cursor: pointer;
         }
-
         .product-image { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: contain; 
-            padding: 0px; 
-            transition: transform 0.4s; 
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.3s ease;
         }
-
-        .product-card:hover .product-image { transform: scale(1.05); } 
-        .product-name { display: none; } 
-        .product-pricing { text-align: center; margin-bottom: 15px; } 
-        .current-price { 
-            font-size: 24px; 
-            font-weight: 800; 
-            color: var(--buy-button-color); 
-            text-shadow: none; 
+        .product-card:hover .product-image { transform: scale(1.08); }
+        .product-name { 
+            font-size: 15px; font-weight: 500; color: #007185; 
+            margin-bottom: 10px; height: 45px; line-height: 1.5;
+            display: -webkit-box; -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical; overflow: hidden;
+            text-decoration: none;
         }
-        .original-price { 
-            font-size: 15px; 
-            text-decoration: line-through; 
-            color: var(--detail-button-color); 
-            margin-left: 10px; 
+        .product-name:hover { color: var(--amazon-orange-darker); text-decoration: underline; }
+        .product-pricing { 
+            margin-bottom: 15px; display: flex; 
+            align-items: center; gap: 8px; flex-wrap: wrap; 
         }
+        .current-price { font-size: 22px; font-weight: 700; color: var(--text-color); }
+        .original-price { font-size: 14px; text-decoration: line-through; color: var(--secondary-text-color); }
+        
+        /* === NEW Discount Badge (Used everywhere) === */
         .discount-badge { 
-            display: inline-block; 
-            background: var(--buy-button-color); 
-            color: white; 
-            padding: 3px 7px; 
-            font-size: 11px; 
+            padding: 4px 9px; 
+            font-size: 13px;
             border-radius: 4px; 
-            font-weight: bold; 
-            margin-left: 8px; 
-        }
-        .product-rating { display: flex; justify-content: center; align-items: center; gap: 5px; margin-bottom: 10px; color: #feca57; }
-        .product-rating .stars { display: inline-flex; gap: 2px; } 
-        .product-rating .rating-value { font-size: 13px; font-weight: bold; color: var(--text-color); }
-        .product-actions { margin-top: auto; display: flex; gap: 10px; } 
-
-        .product-actions .product-button { 
-            flex-grow: 1; 
-            padding: 12px 25px; 
-            font-size: 15px; 
-            margin-bottom: 0; 
-            border-radius: 30px; 
-            background: var(--buy-button-color); 
-            color: white; 
-            border: none; 
-            box-shadow: var(--button-shadow-base); 
-            transition: all 0.15s ease-out; 
-        }
-        .product-actions .product-button:hover { 
-            transform: translateY(2px); 
-            box-shadow: var(--button-shadow-active); 
-            background: #219653; 
-        }
-        .product-actions .product-button:active {
-            transform: translateY(2px); 
-            box-shadow: var(--button-shadow-active);
-        }
-        .product-actions .product-button:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.5), var(--button-shadow-base); 
-        }
-
-        .product-actions .detail-button {
-            background: var(--detail-button-color); 
-            color: white; 
-            border: none; 
-            padding: 12px 10px;
-            border-radius: 30px; 
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.15s ease-out; 
-            flex-shrink: 0;
-            width: 50%;
-            margin-bottom: 0;
-            font-variant: small-caps;
-            box-shadow: var(--button-shadow-base); 
-        }
-        .product-actions .detail-button:hover {
-            background: #C0392B; 
+            font-weight: 700; 
+            background: #CC0C39; 
             color: white;
-            box-shadow: var(--button-shadow-active); 
-            transform: translateY(2px); 
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
         }
-        .product-actions .detail-button:active {
-            transform: translateY(2px); 
-            box-shadow: var(--button-shadow-active);
+        
+        .product-actions { margin-top: auto; display: flex; gap: 8px; width: 100%; }
+        .product-actions .action-button { padding: 9px 10px; font-size: 14px; }
+        .product-actions .detail-button { flex-grow: 1; } /* MODIFIED: Was 2, now 1 */
+        .product-actions .buy-button { flex-grow: 1; }   /* Icon button is smaller */
+        
+        .product-actions .buy-button.icon-button svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--amazon-text-dark);
         }
-        .product-actions .detail-button:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.5), var(--button-shadow-base); 
-        }
-
+        
+        /* FOOTER */
         footer { 
-            background: #16213e; 
-            color: #95a5a6; 
-            padding: 40px 20px; 
-            margin-top: 60px; 
-            text-align: center; 
-            flex-shrink: 0; 
+            background: var(--amazon-blue-light); color: #DDD; 
+            padding: 40px 20px; text-align: center; flex-shrink: 0; 
+            margin-top: 25px; /* Added space */
         }
         .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-copyright { font-size: 13px; line-height: 1.6; }
 
-        .footer-links {
-            display: none; 
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: var(--user-sidebar-width);
-            z-index: 1000; 
-            background: var(--card-bg);
-            padding: 15px;
+        /* USER SIDEBAR */
+        .user-sidebar {
+            display: none; position: fixed; top: 0; left: 0;
+            height: 100vh; width: var(--user-sidebar-width); z-index: 1000; 
+            background: var(--card-bg); padding: 20px; 
             border-right: 1px solid var(--border-color);
-            flex-direction: column;
-            gap: 10px;
+            flex-direction: column; gap: 10px;
             transform: translateX(calc(-1 * var(--user-sidebar-width))); 
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        .footer-links.show-dropdown {
-            display: flex !important; 
-            transform: translateX(0); 
-            box-shadow: 4px 0 15px var(--card-shadow); 
+        .user-sidebar .sidebar-header {
+            padding: 15px; background: var(--amazon-blue-dark);
+            color: var(--amazon-text-light); font-size: 20px; font-weight: 700;
+            margin: -20px -20px 10px -20px; display: flex; align-items: center; gap: 10px;
+            font-family: 'Poppins', sans-serif;
         }
-        .footer-links.show-dropdown a {
-            color: var(--text-color);
-            font-weight: 500;
-            padding: 12px 15px; 
-            border-radius: 8px; 
-            text-align: left;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background 0.3s;
-            display: flex; 
-            align-items: center;
-            gap: 8px;
+         .user-sidebar .sidebar-header svg { fill: var(--amazon-text-light); width: 24px; height: 24px; }
+        .user-sidebar.show { display: flex !important; transform: translateX(0); box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15); }
+        .user-sidebar a {
+            color: var(--text-color); font-weight: 500; padding: 12px 15px; 
+            border-radius: 8px; text-decoration: none; display: flex; 
+            align-items: center; gap: 15px; cursor: pointer;
         }
-        .footer-links.show-dropdown a svg {
-            width: 18px;
-            height: 18px;
-            fill: var(--primary-accent); 
-            filter: drop-shadow(var(--icon-shadow)); 
-            flex-shrink: 0;
-        }
-
-        .footer-links.show-dropdown a:hover {
-            background: var(--bg-color);
-        }
-        
+        .user-sidebar a svg { width: 20px; height: 20px; fill: var(--secondary-text-color); }
+        .user-sidebar a:hover { background: var(--bg-color); }
         #user-sidebar-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 999; 
-            opacity: 0;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 999; opacity: 0; pointer-events: none;
             transition: opacity 0.3s ease;
         }
-        #user-sidebar-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .footer-copyright { font-size: 14px; line-height: 1.6; }
+        #user-sidebar-overlay.active { opacity: 1; pointer-events: all; }
+        
+        /* UTILITIES & MODALS */
         .loading { text-align: center; padding: 60px 20px; font-size: 20px; color: var(--secondary-text-color); grid-column: 1 / -1; }
-        .loading-spinner { width: 50px; height: 50px; border: 4px solid var(--card-shadow); border-top-color: var(--primary-accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        .loading-spinner { width: 50px; height: 50px; border: 4px solid var(--border-color); border-top-color: var(--primary-accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .empty-state { text-align: center; padding: 60px 20px; grid-column: 1 / -1; }
-        .empty-state svg { width: 100px; height: 100px; fill: var(--border-color); margin-bottom: 20px; }
+        .empty-state svg { width: 80px; height: 80px; fill: var(--border-color); margin-bottom: 20px; }
         .empty-state h3 { font-size: 24px; margin-bottom: 10px; color: var(--secondary-text-color); } .empty-state p { font-size: 16px; color: #95a5a6; }
         
         .modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.7); 
-            z-index: 1000; 
+            background: rgba(0, 0, 0, 0.7); z-index: 1000; 
             display: flex; align-items: center; justify-content: center; 
             opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; 
         }
         .modal-overlay.show { opacity: 1; visibility: visible; }
-        
         .modal-content { 
-            background: var(--card-bg); 
-            color: var(--text-color); 
-            padding: 30px 40px; 
-            border-radius: 15px; 
-            width: 90%; 
-            max-width: 600px;
-            max-height: 90vh; 
-            overflow-y: auto; 
-            position: relative; 
-            transform: scale(0.9); 
-            transition: transform 0.3s;
-            box-shadow: var(--card-shadow); 
+            background: var(--card-bg); color: var(--text-color); padding: 30px; 
+            border-radius: 8px; width: 90%; max-width: 500px;
+            max-height: 90vh; overflow-y: auto; position: relative; 
+            transform: translateY(-20px); transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        /* MODIFIED: Re-enable user selection for modal content */
+        .modal-content, .product-detail-modal-content {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
         }
         
-        @media (max-width: 768px) {
-            .modal-content {
-                width: 100%;
-                max-width: 100%; 
-                height: 100%;
-                max-height: 100%; 
-                margin: 0;
-                padding: 15px;
-                border-radius: 0;
-            }
-            .modal-close {
-                top: 10px;
-                right: 15px;
-            }
-
-            #filterSelects {
-                flex-direction: row; 
-                flex-wrap: nowrap; 
-                gap: 10px; 
-                margin: 20px 0;
-            }
-            #filterSelects .sort-filter {
-                flex-basis: calc(50% - 5px); 
-                max-width: 50%;
-            }
-            .sort-filter {
-                flex-direction: column; 
-                align-items: flex-start;
-                gap: 5px; 
-            }
-            .sort-filter svg {
-                margin-left: 5px; 
-            }
-        }
-        
-        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-overlay.show .modal-content { transform: translateY(0); }
         .modal-close { 
-            position: absolute; 
-            top: 15px; 
-            right: 20px; 
-            background: none; 
-            border: none; 
-            cursor: pointer; 
-            opacity: 1; 
-            transition: transform 0.2s; 
-            width: 30px; 
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; top: 15px; right: 15px;
+            background: var(--amazon-background-grey);
+            border-radius: 50%; border: none; cursor: pointer; 
+            transition: background 0.2s;
+            width: 40px; height: 40px; 
+            display: flex; align-items: center; justify-content: center; z-index: 10;
         }
-        .modal-close:hover { opacity: 0.8; transform: rotate(90deg); }
-        .modal-close svg {
-            width: 100%;
-            height: 100%;
-            fill: var(--detail-button-color); 
-        }
-        
-        #modal-title { margin-top: 0; margin-bottom: 20px; font-size: 28px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; text-align: center; font-variant: small-caps; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        #modal-title .icon { 
-            width: 25px;
-            height: 25px;
-            fill: var(--primary-accent); 
-            filter: drop-shadow(var(--icon-shadow));
-        }
-
+        .modal-close:hover { background: var(--border-color); }
+        .modal-close svg { width: 20px; height: 20px; fill: var(--amazon-text-dark); }
+        #modal-title { margin-top: 0; margin-bottom: 20px; font-size: 24px; font-weight: 500; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        #modal-title .icon { width: 25px; height: 25px; fill: var(--secondary-text-color); }
         #modal-body { line-height: 1.7; font-weight: 400; }
-        
 
-        @media (max-width: 768px) { 
-            .slider { height: 300px; } 
-            .section-title { font-size: 28px; } 
-            
-            .products-grid { 
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
-                gap: 15px; 
-            } 
-            .product-card { padding: 10px; } 
-            .product-image-wrapper { height: 120px; margin-bottom: 10px; } 
-
-            .product-actions .product-button {
-                padding: 8px 6px; 
-                font-size: 12px; 
-                font-weight: 600; 
-                width: 50%; 
-                border-width: 1px;
-            }
-            .product-actions .detail-button {
-                padding: 8px 6px; 
-                font-size: 12px; 
-                font-weight: 600; 
-                width: 50%; 
-                border: none; 
-            }
-
-            .header-content { 
-                flex-wrap: wrap; 
-                justify-content: space-between; 
-                gap: 10px; 
-            }
-
-            .search-container {
-                order: 3; 
-                width: 100%; 
-                max-width: none; 
-                margin-top: 5px; 
-            }
-            #searchInput {
-                padding: 8px 40px 8px 15px; 
-                font-size: 15px;
-            }
-            
-            body { padding-bottom: 50px; }
-
-            .header-action-button {
-                width: 38px;
-                height: 38px;
-                border-radius: 6px;
-            }
-            .header-action-button svg {
-                width: 20px;
-                height: 20px;
-            }
-            #favsItemCount {
-                top: -6px;
-                right: -6px;
-                padding: 1px 5px;
-                font-size: 10px;
-                min-width: 20px;
-            }
+        /* === IMPROVED BOTTOM NAVIGATION BAR (GUARANTEED SAME SIZE) === */
+        .bottom-nav {
+            display: flex; justify-content: space-around;
+            align-items: stretch; position: fixed; bottom: 0;
+            left: 0; width: 100%; height: 65px;
+            background: var(--silver-background);
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+            z-index: 998; border-top: 1px solid var(--border-color);
         }
-        @media (max-width: 480px) { .slider { height: 250px; } .product-name { font-size: 14px; min-height: 35px; } .current-price { font-size: 20px; } }
+        .nav-link {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; flex: 1; /* This ensures all items take equal space */
+            text-decoration: none;
+            color: var(--secondary-text-color); font-size: 12px;
+            padding: 5px 0; transition: color 0.2s, background-color 0.2s;
+            position: relative; cursor: pointer; border-radius: 8px; margin: 4px;
+        }
+        .nav-link svg {
+            width: 26px; height: 26px; fill: currentColor; margin-bottom: 2px;
+        }
+        .nav-link span { font-weight: 500; }
+        .nav-link:hover { color: var(--amazon-text-dark); }
+        .nav-link.active {
+            color: var(--amazon-orange-darker);
+            background-color: rgba(255, 153, 0, 0.1);
+        }
         
-        #custom-confirm-overlay {
+        /* LOADER FOR "BUY NOW" CLICK */
+        #buy-now-loader-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.75); z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        #buy-now-loader-overlay.show { opacity: 1; pointer-events: all; }
+        .buy-now-spinner {
+            width: 80px; height: 80px;
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--amazon-orange);
+            border-radius: 50%;
+            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        /* Toast notification */
+        .toast-notification {
+            position: fixed; bottom: 80px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background-color: var(--amazon-blue-dark);
+            color: var(--amazon-text-light); padding: 12px 25px;
+            border-radius: 25px; z-index: 1001; opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .toast-notification.show {
+            opacity: 1; visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* === NEW: CUSTOM SELECT MODAL (for Filters) === */
+        #custom-select-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.75);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        #custom-confirm-overlay.show {
+            background: rgba(0,0,0,0.6);
+            z-index: 1002;
             display: flex;
-            opacity: 1;
+            align-items: flex-end; /* Aligns to bottom */
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
         }
-        #custom-confirm-modal {
-            background-color: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 15px;
-            padding: 1.5rem;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: var(--card-shadow);
-            transform: scale(0.8);
+        #custom-select-modal.show { opacity: 1; visibility: visible; }
+        
+        .custom-select-content {
+            background: var(--card-bg);
+            width: 100%;
+            border-radius: 16px 16px 0 0;
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+            transform: translateY(100%);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        #custom-confirm-overlay.show #custom-confirm-modal {
-            transform: scale(1);
+        #custom-select-modal.show .custom-select-content {
+            transform: translateY(0);
         }
-        #confirm-message {
-            font-size: 1.15rem;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
-            color: var(--text-color);
-            text-align: center;
-        }
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-        .modal-actions .btn {
-            padding: 0.6rem 1.2rem;
-            font-size: 0.95rem;
+        #custom-select-title {
+            font-size: 22px;
             font-weight: 600;
-            border-radius: 30px;
-            box-shadow: var(--button-shadow-base);
-            transition: all 0.15s ease-out;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
         }
-        .modal-actions .btn-secondary {
-            background-color: var(--auth-button-secondary);
-            color: var(--auth-text-color);
-            border: 1px solid var(--auth-input-border);
+        #custom-select-options {
+            list-style: none;
         }
-        .modal-actions .btn-secondary:hover { 
-            background-color: #bbbbbb; 
-            transform: translateY(2px);
-            box-shadow: var(--button-shadow-active);
-        }
-        .modal-actions .btn-danger {
-            background-color: var(--detail-button-color);
-            color: white;
-            border: none;
-        }
-        .modal-actions .btn-danger:hover { 
-            background-color: #C0392B; 
-            transform: translateY(2px);
-            box-shadow: var(--button-shadow-active);
-        }
-        .modal-actions .btn:active {
-            transform: translateY(2px); 
-            box-shadow: var(--button-shadow-active);
-        }
-        .modal-actions .btn:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(31, 97, 141, 0.5), var(--button-shadow-base);
-        }
-        #custom-alert-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.75);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        #custom-alert-overlay.show {
+        .custom-select-option {
             display: flex;
-            opacity: 1;
-        }
-        #custom-alert-modal {
-            background-color: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 15px;
-            padding: 1.5rem;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: var(--card-shadow);
-            transform: scale(0.8);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        #custom-alert-overlay.show #custom-alert-modal {
-            transform: scale(1);
-        }
-        #alert-message {
-            font-size: 1.15rem;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 10px;
+            font-size: 17px;
             font-weight: 500;
-            margin-bottom: 1.5rem;
-            color: var(--text-color);
-            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
         }
-        #custom-alert-modal .modal-actions {
-            justify-content: center;
+        .custom-select-option:hover {
+            background-color: var(--bg-color);
         }
-        #alert-ok-btn {
-            width: 150px;
-            background: var(--primary-accent);
-            color: white;
-            border: none;
+        .custom-select-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--amazon-orange-darker);
         }
-        #alert-ok-btn:hover {
-            background: #1a4f73;
-            transform: translateY(2px);
-            box-shadow: var(--button-shadow-active);
-        }
-        #alert-ok-btn:active {
-            transform: translateY(2px);
-            box-shadow: var(--button-shadow-active);
-        }
-        #alert-ok-btn:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(31, 97, 141, 0.5), var(--button-shadow-base);
+        .custom-select-option label {
+            flex-grow: 1;
+            margin-right: 15px;
+            cursor: pointer;
         }
 
+        /* === NEW: PRODUCT DETAIL MODAL (MODIFIED FOR FULLSCREEN) === */
+        #product-detail-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.7); z-index: 1001; 
+            display: flex;
+            /* MODIFIED: Removed align/justify/padding for fullscreen */
+            opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; 
+            padding: 0; /* MODIFIED: Was 20px */
+        }
+        #product-detail-modal-overlay.show { opacity: 1; visibility: visible; }
+        
+        .product-detail-modal-content {
+            background: var(--bg-color);
+            color: var(--text-color);
+            width: 100%; /* MODIFIED: Was max-width 900px */
+            height: 100%; /* MODIFIED: Was max-height 85vh */
+            border-radius: 0px; /* MODIFIED: Was 8px */
+            overflow: hidden; 
+            position: relative; 
+            transform: translateY(0); /* MODIFIED: Removed transform */
+            transition: transform 0.3s;
+            box-shadow: none; /* MODIFIED: Removed shadow */
+            display: flex;
+            flex-direction: column;
+        }
+        #product-detail-modal-overlay.show .product-detail-modal-content { 
+            transform: translateY(0); 
+        }
+        
+        .product-detail-header {
+            background: var(--amazon-blue-dark);
+            color: var(--amazon-text-light);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .product-detail-header h2 { font-size: 18px; font-weight: 500; }
+        .product-detail-close-btn {
+            background: none; border: none; cursor: pointer;
+        }
+        .product-detail-close-btn svg {
+            width: 28px; height: 28px; fill: var(--amazon-text-light);
+        }
+
+        .product-detail-content-wrapper {
+            padding: 20px;
+            flex-grow: 1; /* MODIFIED: Added */
+            display: flex; /* MODIFIED: Added */
+            flex-direction: column; /* MODIFIED: Added */
+            overflow-y: auto; /* MODIFIED: Added */
+        }
+        .product-detail-main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0; /* MODIFIED: Added */
+        }
+        .product-detail-image-container {
+            width: 100%;
+            height: 300px; /* MODIFIED: Was max-height 400px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        .product-detail-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .product-detail-info h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .product-detail-pricing-box {
+            background-color: var(--silver-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .product-detail-pricing-box .mrp { font-size: 14px; color: var(--secondary-text-color); font-weight: 700; /* MODIFIED: Added bold */ }
+        .product-detail-pricing-box .mrp span { text-decoration: line-through; }
+        .product-detail-pricing-box .deal-price-row { 
+            font-size: 18px; color: var(--text-color); margin-top: 4px; 
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap; 
+        }
+        /* MODIFIED: Bolding the "Deal Price:" text */
+        .product-detail-pricing-box .deal-price-row > span:first-child {
+            font-weight: 700;
+        }
+        .product-detail-pricing-box .deal-price { font-size: 28px; color: #B12704; font-weight: 900; /* MODIFIED: Was 700 */ }
+        
+        .product-detail-description h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        .product-detail-description p { font-size: 15px; line-height: 1.7; color: var(--secondary-text-color); font-weight: 700; /* MODIFIED: Added bold */ }
+        .product-detail-actions { margin-top: 25px; }
+        .product-detail-actions .buy-button { width: 100%; padding: 14px; font-size: 16px; }
+
+        .related-products-section { 
+            margin-top: 30px; 
+            flex-shrink: 0; /* MODIFIED: Added */
+        }
+        .related-products-section h4 { font-size: 20px; font-weight: 700; margin-bottom: 15px; }
+        
+        /* === MODIFICATION: REMOVED OLD RELATED PRODUCTS CSS === */
+        
+        @media (min-width: 768px) {
+            .product-detail-main {
+                grid-template-columns: 40% 1fr;
+                gap: 30px;
+            }
+            .product-detail-image-container {
+                height: 400px; /* MODIFIED: Was max-height 500px */
+            }
+            .custom-select-trigger {
+                width: auto; /* Allow side-by-side on desktop */
+            }
+            
+            /* MODIFIED: 3-column grid for tablet/desktop */
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+        }
+        
+        /* RESPONSIVE ADJUSTMENTS */
+        @media (max-width: 992px) { .search-container { max-width: 500px; } }
+        
+        @media (max-width: 767px) { /* MODIFIED: Changed from 768px */
+            .header-content { flex-wrap: wrap; justify-content: space-between; gap: 10px; padding: 0 10px; }
+            .logo { order: 1; font-size: 22px; }
+            #headerMenuToggle { order: 0; }
+            .search-container { order: 2; width: 100%; max-width: none; margin-top: 5px; }
+            #searchInput { height: 40px; }
+            .search-button { height: 40px; }
+            #clearSearchBtn { right: 55px; }
+            .slider { height: 250px; }
+            /* MODIFIED: Removed grid rules, now handled by base */
+            .product-image-wrapper { height: 160px; }
+            .deal-of-the-day-card { padding: 15px; gap: 15px; }
+            .deal-image-wrapper { height: 250px; }
+            .deal-info h3 { font-size: 20px; }
+        }
+        @media (max-width: 480px) { 
+            .slider { height: 200px; }
+            /* MODIFIED: Removed grid rules, now handled by base */
+            .product-card-content { padding: 10px; }
+            .product-image-wrapper { height: 140px; }
+            .product-name { font-size: 14px; height: 42px; -webkit-line-clamp: 2; margin-bottom: 8px; }
+            .current-price { font-size: 18px; }
+            .original-price { font-size: 12px; }
+            .product-actions .action-button { font-size: 13px; padding: 8px; }
+            #headerMenuToggle svg { width: 24px; height: 24px; }
+        }
+        
+        /* MODIFIED: Removed redundant 992px rule */
     </style>
 </head>
 <body>
     <header>
         <div class="header-content">
-            <button class="theme-toggle" id="headerMenuToggle" aria-label="Menu Options">
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            <button id="headerMenuToggle" aria-label="Menu Options">
+                <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
             </button>
-            <a href="#" class="logo">Daily<span> Deals Hub</span></a>
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search for products..."> 
+            <a class="logo">Deals<span>Hub</span></a> <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search Deals Hub..."> 
+                <button class="search-button" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                </button>
                 <button id="clearSearchBtn" aria-label="Clear search">&times;</button>
             </div>
-            <button class="header-action-button" id="favsButton" aria-label="View Saved Favourites">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 0 1 7.5 3c1.74 0 3.41.81 4.5 2.09A5.4 5.4 0 0 1 16.5 3c3.07 0 5.5 2.43 5.5 5.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                <span id="favsItemCount" style="display:none;">0</span>
-            </button>
         </div>
     </header>
 
     <div class="main-content">
-        <div class="section-container slider-container">
-            <div class="slider">
-                <div class="slider-wrapper" id="sliderWrapper"><div class="slide"><div class="loading"><div class="loading-spinner"></div></div></div></div>
-                <div class="slider-dots" id="sliderDots"></div>
+        <div id="homeContent">
+            <div class="section-container slider-container" id="pageSliderContainer">
+                <div class="slider">
+                    <div class="slider-wrapper" id="pageSliderWrapper"><div class="slide"><div class="loading"><div class="loading-spinner"></div></div></div></div>
+                    <div class="slider-dots" id="pageSliderDots"></div>
+                </div>
+            </div>
+            
+            <div class="section-container">
+                <div id="filterSelects">
+                    <button class="custom-select-trigger" id="categorySelectTrigger">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z"></path></svg>
+                        <span id="categorySelectText">All Categories</span>
+                    </button>
+                    <button class="custom-select-trigger" id="sortSelectTrigger">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 4H21V6H3V4ZM3 11H15V13H3V11ZM3 18H9V20H3V18Z"></path></svg>
+                        <span id="sortSelectText">Sort by</span>
+                    </button>
+                </div>
+            </div>
+            <div class="section-container" id="dealOfTheDayContainer"></div>
+            <div class="section-container">
+                <h2 class="section-title">More Deals For You</h2>
+                <div class="products-grid" id="productsGrid"><div class="loading"><div class="loading-spinner"></div></div></div>
             </div>
         </div>
         
-        <div class="section-container">
-            <div id="filterSelects" style="display: flex; gap: 25px; flex-wrap: nowrap; justify-content: space-between; margin: 40px 0;">
-                <div class="sort-filter">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z"></path></svg>
-                    <select id="categorySelect">
-                        <option value="All">All Categories</option> 
-                    </select>
-                </div>
-                <div class="sort-filter">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4H21V6H3V4ZM3 11H15V13H3V11ZM3 18H9V20H3V18Z"></path></svg>
-                    <select id="sortSelect">
-                        <option value="default">Sort by</option>
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
-                        <option value="name-asc">Name: A to Z</option>
-                        <option value="rating-desc">Rating: High to Low</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section-container" id="dealOfTheDayContainer"></div>
-        <div class="section-container">
-            <div class="products-grid" id="productsGrid"><div class="loading"><div class="loading-spinner"></div></div></div>
-        </div>
-    </div>
+        <div id="pageContent" style="display: none;"></div> </div>
+
     <footer>
         <div class="footer-content">
-            <p class="footer-copyright">&copy; 2025 Daily Deals Hub. All Rights Reserved. <br>Disclosure: This site contains affiliate links. If you click on a link and make a purchase, we may receive a commission at no extra cost to you.</p>
+            <p class="footer-copyright">&copy; 2025 Daily Deals Hub. All Rights Reserved. <br>Disclosure: This site contains affiliate links. If you click on a link and make a a purchase, we may receive a commission at no extra cost to you.</p>
         </div>
     </footer>
+    
+    <div id="product-detail-modal-overlay">
+        <div class="product-detail-modal-content">
+            <div class="product-detail-header">
+                <h2>Product Details</h2>
+                <button class="product-detail-close-btn" id="product-detail-close-btn">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+            </div>
+            <div class="product-detail-content-wrapper" id="product-detail-content">
+                </div>
+        </div>
+    </div>
+
+    <div id="custom-select-modal">
+        <div class="custom-select-content">
+            <h3 id="custom-select-title">Select an option</h3>
+            <ul id="custom-select-options">
+                </ul>
+        </div>
+    </div>
+
+
+    <div id="buy-now-loader-overlay">
+        <div class="buy-now-spinner"></div>
+    </div>
 
     <div id="page-modal" class="modal-overlay">
         <div class="modal-content">
             <button id="modal-close-btn" class="modal-close">
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
             </button>
             <h2 id="modal-title"></h2>
             <div id="modal-body"></div>
         </div>
     </div>
     
-    <!-- Sidebar Links: Only info pages remain -->
-    <div class="footer-links" id="footerLinksDropdown">
-        <a data-page="aboutUs"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"></path></svg>About Us</a>
-        <a data-page="privacyPolicy"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>Privacy Policy</a>
-        <a data-page="affiliateDisclosure"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 12.17l7.59-7.59L19 6l-9 9z"/></svg>Affiliate Disclosure</a>
+    <div class="user-sidebar" id="userSidebar">
+        <div class="sidebar-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+            Hello, User
+        </div>
+        <a id="about-us-link"><svg viewBox="0 0 24 24"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>About Us</a>
+        <a id="privacy-policy-link"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>Privacy Policy</a>
+        <a id="affiliate-disclosure-link"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 12.17l7.59-7.59L19 6l-9 9z"/></svg>Affiliate Disclosure</a>
         <div style="height: 1px; background: var(--border-color); margin: 5px 0;"></div>
     </div>
-
     <div id="user-sidebar-overlay"></div>
 
-    <!-- Custom Confirmation Modal HTML (kept for potential other uses) -->
-    <div id="custom-confirm-overlay">
-        <div id="custom-confirm-modal">
-            <p id="confirm-message">Are you sure you want to proceed?</p>
-            <div class="modal-actions">
-                <button id="confirm-cancel-btn" class="btn btn-secondary">Cancel</button>
-                <button id="confirm-confirm-btn" class="btn btn-danger">Confirm</button>
-            </div>
-        </div>
-    </div>
-    <!-- END Custom Confirmation Modal HTML -->
-
-    <!-- Custom Alert Modal HTML (kept for general notifications) -->
-    <div id="custom-alert-overlay">
-        <div id="custom-alert-modal">
-            <p id="alert-message"></p>
-            <div class="modal-actions" style="justify-content: center;">
-                <button id="alert-ok-btn" class="btn">OK</button>
-            </div>
-        </div>
-    </div>
-    <!-- END Custom Alert Modal HTML -->
-
+    <nav class="bottom-nav">
+        <a data-page="home" class="nav-link active">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>Home</span>
+        </a>
+        <a data-page="Offers" class="nav-link">
+            <svg viewBox="0 0 24 24"><path d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16zM15 11c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z"/></svg>
+            <span>Offers</span>
+        </a>
+        <a data-page="Meesho" class="nav-link">
+             <svg viewBox="0 0 24 24"><path d="M18,6H16V4a2,2,0,0,0-2-2H10A2,2,0,0,0,8,4V6H6A2,2,0,0,0,4,8V19a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V8A2,2,0,0,0,18,6ZM10,4h4V6H10ZM18,19H6V8H18Z"/></svg>
+            <span>Meesho</span>
+        </a>
+        <a data-page="Amazon" class="nav-link">
+            <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            <span>Amazon</span>
+        </a>
+        <a data-page="Digistore24" class="nav-link">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zM4 18V6h1v12H4zm2 0V6h1v12H6zm14 0h-1V6h1v12zm-2 0h-1V6h1v12zm-4-1.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-4 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            <span>Digistore24</span>
+        </a>
+    </nav>
+    
+    <div id="toast-notification" class="toast-notification"></div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCGrsuFekyBXxcb5KCpnFoguZd1Sayy1D4",
-            authDomain: "shop-45e7c.firebaseapp.com",
-            databaseURL: "https://shop-45e7c-default-rtdb.firebaseio.com",
-            projectId: "shop-45e7c",
-            storageBucket: "shop-45e7c.appspot.com", 
-            messagingSenderId: "79947037107",
-            appId: "1:79947037107:web:1dc461db53f49382a773c6"
-        };
-
-        // Initialize Firebase V8
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const storage = firebase.storage();
-
-        let allProducts = [], pageContents = {}, currentCategory = 'All', currentSort = 'default', currentSearch = '';
-
-        const sliderWrapper = document.getElementById('sliderWrapper');
-        const sliderDots = document.getElementById('sliderDots');
-        const productsGrid = document.getElementById('productsGrid');
-        const categorySelect = document.getElementById('categorySelect'); 
-        const sortSelect = document.getElementById('sortSelect');
-        const searchInput = document.getElementById('searchInput');
-        const clearSearchBtn = document.getElementById('clearSearchBtn');
-        const footerLinksContainer = document.getElementById('footerLinksDropdown');
-        const pageModal = document.getElementById('page-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalBody = document.getElementById('modal-body');
-        const modalCloseBtn = document.getElementById('modal-close-btn');
-
-        const headerMenuToggle = document.getElementById('headerMenuToggle'); 
-        const userSidebarOverlay = document.getElementById('user-sidebar-overlay');
-        const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
-
-        // Favourites Button Elements
-        const favsButton = document.getElementById('favsButton');
-        const favsItemCount = document.getElementById('favsItemCount');
-        
-        // Custom Confirm Modal Elements
-        const customConfirmOverlay = document.getElementById('custom-confirm-overlay');
-        const confirmMessage = document.getElementById('confirm-message');
-        const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
-        const confirmConfirmBtn = document.getElementById('confirm-confirm-btn');
-        let currentConfirmCallback = null;
-
-        // Custom Alert Modal Elements
-        const customAlertOverlay = document.getElementById('custom-alert-overlay');
-        const alertMessage = document.getElementById('alert-message');
-        const alertOkBtn = document.getElementById('alert-ok-btn');
-        let currentAlertCallback = null;
-
-
-        const PLACEHOLDER_IMAGE = "https://via.placeholder.com/150/f0f0f0/666666?text=No+Image";
-
-        function closeHeaderMenu() {
-            if(footerLinksContainer.classList.contains('show-dropdown')) {
-                footerLinksContainer.classList.remove('show-dropdown');
-                userSidebarOverlay.classList.remove('active'); 
-            }
-        }
-
-        function showPageModal(title, content) {
-            modalTitle.innerHTML = title;
-            modalBody.innerHTML = content;
-            pageModal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-            closeHeaderMenu(); 
-        }
-
-        function hidePageModal() {
-            pageModal.classList.remove('show');
-            document.body.style.overflow = 'auto';
-        }
-
-        const starSVGPath = "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z";
-
-        function generateStars(rating, size = 18, fillColor = "#feca57", emptyColor = "#e0e0e0") {
-            const numericRating = parseFloat(rating);
-            if (isNaN(numericRating) || numericRating <= 0) {
-                return '';
-            }
-
-            const uniqueGradId = `half-grad-${Math.random().toString(36).substring(2, 9)}`;
-            
-            const fullStar = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" style="display: inline-block; vertical-align: middle;"><path fill="${fillColor}" d="${starSVGPath}"/></svg>`;
-            
-            const halfStar = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" style="display: inline-block; vertical-align: middle;">
-                                <defs>
-                                    <linearGradient id="${uniqueGradId}">
-                                        <stop offset="50%" stop-color="${fillColor}" />
-                                        <stop offset="50%" stop-color="${emptyColor}" />
-                                    </linearGradient>
-                                </defs>
-                                <path fill="url(#${uniqueGradId})" stroke="${fillColor}" stroke-width="1.2" d="${starSVGPath}"/>
-                            </svg>`;
-
-            const emptyStar = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" style="display: inline-block; vertical-align: middle;"><path fill="transparent" stroke="${fillColor}" stroke-width="1.2" d="${starSVGPath}"/></svg>`;
-
-            let starsHTML = '';
-            const fullStarsCount = Math.floor(numericRating);
-            const hasHalfStar = (numericRating % 1) >= 0.1;
-
-            for (let i = 0; i < 5; i++) {
-                if (i < fullStarsCount) {
-                    starsHTML += fullStar;
-                } else if (i === fullStarsCount && hasHalfStar) {
-                    starsHTML += halfStar;
-                } else {
-                    starsHTML += emptyStar;
-                }
-            }
-            return starsHTML;
-        }
-
-        function handleImageError(imageElement) {
-            imageElement.src = PLACEHOLDER_IMAGE;
-            imageElement.onerror = null;
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('img').forEach(img => {
-                img.onerror = () => handleImageError(img);
-            });
-            updateFavCount();
-        });
-
-        window.viewDetails = async (productId) => {
-            const product = allProducts.find(p => p.id === productId);
-            if (!product) return;
-
-            const infoIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>`;
+            const firebaseConfig = {
+                apiKey: "AIzaSyCGrsuFekyBXxcb5KCpnFoguZd1Sayy1D4",
+                authDomain: "shop-45e7c.firebaseapp.com",
+                databaseURL: "https://shop-45e7c-default-rtdb.firebaseio.com",
+                projectId: "shop-45e7c",
+                storageBucket: "shop-45e7c.appspot.com",
+                messagingSenderId: "79947037107",
+                appId: "1:79947037107:web:1dc461db53f49382a773c6"
+            };
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.database();
             
-            const discount = product.originalPrice && product.currentPrice < product.originalPrice ? Math.round(((product.originalPrice - product.currentPrice) / product.originalPrice) * 100) : 0;
+            // MODIFIED: Added currentPage and allSliders
+            let allProducts = [], allCategories = [], currentCategory = 'All', currentSort = 'default', currentSearch = '', currentPage = 'home';
+            let allSliders = {};
+
+            // --- ALL Element Variables ---
+            const userSidebar = document.getElementById('userSidebar');
+            const userSidebarOverlay = document.getElementById('user-sidebar-overlay');
+            const headerMenuToggle = document.getElementById('headerMenuToggle'); 
             
-            const adminRating = product.rating || 0;
-            const starsForDisplay = generateStars(adminRating, 24);
+            const pageModal = document.getElementById('page-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            
+            const mainHomeContent = document.getElementById('homeContent');
+            const mainPageContent = document.getElementById('pageContent');
+            
+            // New Custom Select Modal
+            const customSelectModal = document.getElementById('custom-select-modal');
+            const customSelectTitle = document.getElementById('custom-select-title');
+            const customSelectOptions = document.getElementById('custom-select-options');
+            const categorySelectTrigger = document.getElementById('categorySelectTrigger');
+            const categorySelectText = document.getElementById('categorySelectText');
+            const sortSelectTrigger = document.getElementById('sortSelectTrigger');
+            const sortSelectText = document.getElementById('sortSelectText');
+            
+            // New Product Detail Modal
+            const productDetailModal = document.getElementById('product-detail-modal-overlay');
+            const productDetailContent = document.getElementById('product-detail-content');
+            const productDetailCloseBtn = document.getElementById('product-detail-close-btn');
 
-            const fullDescription = product.description || 'No detailed description available for this product.';
+            const PLACEHOLDER_IMAGE = "https://via.placeholder.com/250/EAEDED/888888?text=No+Image";
 
-            let content = `
-                <div style="text-align: center; padding: 10px;">
-                    <div style="background: #ffffff; padding: 5px; border-radius: 10px; margin-bottom: 15px; height: 200px; display: flex; align-items: center; justify-content: center;">
-                        <img src="${product.image}" alt="${product.name}" style="max-height: 100%; max-width: 100%; object-fit: contain;" onerror="handleImageError(this)">
-                    </div>
-                    <h3 style="font-size: 22px; font-weight: 700; margin-bottom: 20px; color: var(--primary-accent);">${product.name}</h3>
-                    
-                    ${adminRating > 0 ? `<div class="product-rating" style="margin-bottom: 15px;"><div class="stars">${starsForDisplay}</div><span class="rating-value" style="font-size: 16px;">${adminRating.toFixed(1)}/5.0</span></div>` : '<p style="margin-bottom: 15px;">No ratings yet.</p>'}
-                    
-                    <div class="product-pricing" style="margin-bottom: 20px;">
-                        <span class="current-price" style="font-size: 32px; color: var(--buy-button-color); text-shadow: none;">₹${product.currentPrice.toLocaleString('en-IN')}</span>
-                        ${product.originalPrice && product.currentPrice < product.originalPrice ? `<span class="original-price" style="font-size: 18px; margin-left: 15px; color: var(--detail-button-color);">₹${product.originalPrice.toLocaleString('en-IN')}</span>` : ''}
-                        ${discount > 0 ? `<span class="discount-badge" style="font-size: 14px; padding: 6px 12px; margin-left: 15px; background: var(--buy-button-color);">${discount}% OFF</span>` : ''}
-                    </div>
-                    
-                    <div style="height: 1px; background: var(--border-color); margin: 5px auto 25px; width: 80%;"></div>
-
-                    <p style="text-align: center; margin-bottom: 30px; font-size: 16px; line-height: 1.6; font-weight: 700;">
-                        Full Description: <span style="font-weight: 400;">${fullDescription}</span>
-                    </p>
-                    
-                    <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: center;">
-                        <button class="product-button" 
-                            style="flex: 0 1 200px; border-radius: 30px; background: var(--buy-button-color); color: white; padding: 15px 30px; font-size: 18px; font-weight: 700;" 
-                            onclick="window.open('${product.buttonUrl}', '_blank', 'noopener')">
-                            ${product.buttonText || 'Buy now'}
-                        </button>
-                    </div>
-                </div>
-            `;
-            showPageModal(`${infoIcon}<span>PRODUCT DETAILS</span>`, content); 
-        };
-
-        if(headerMenuToggle) {
-            headerMenuToggle.addEventListener('click', (e) => {
-                e.preventDefault(); e.stopPropagation(); 
-                footerLinksContainer.classList.toggle('show-dropdown');
-                userSidebarOverlay.classList.toggle('active'); 
-            });
-        }
-        
-        document.addEventListener('click', (e) => {
-            const isMenuOpen = footerLinksContainer.classList.contains('show-dropdown');
-            if (isMenuOpen && (e.target === userSidebarOverlay || (!footerLinksContainer.contains(e.target) && e.target !== headerMenuToggle && !headerMenuToggle.contains(e.target)))) {
-                closeHeaderMenu();
+            // --- Utility Functions ---
+            function formatCurrency(amount) {
+                const numericAmount = parseFloat(amount) || 0;
+                return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(numericAmount);
             }
-        });
 
-        footerLinksContainer.addEventListener('click', (e) => {
-            if (e.target.closest('a') && e.target.closest('a').dataset.page) {
-                e.preventDefault();
-                const anchor = e.target.closest('a');
-                const pageKey = anchor.dataset.page;
-                
+            function closeHeaderMenu() {
+                if(userSidebar.classList.contains('show')) {
+                    userSidebar.classList.remove('show');
+                    userSidebarOverlay.classList.remove('active'); 
+                }
+            }
+
+            function showPageModal(title, content) {
+                modalTitle.innerHTML = title;
+                modalBody.innerHTML = content;
+                pageModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
                 closeHeaderMenu(); 
+            }
 
-                let icon = '';
-                switch(pageKey) {
-                    case 'aboutUs': icon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"></path></svg>`; break;
-                    case 'privacyPolicy': icon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>`; break;
-                    case 'affiliateDisclosure': icon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 12.17l7.59-7.59L19 6l-9 9z"/></svg>`; break;
+            function hidePageModal() {
+                pageModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+            
+            function showToast(message) {
+                const toast = document.getElementById('toast-notification');
+                if (!toast) return;
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => { toast.classList.remove('show'); }, 2500);
+            }
+
+            window.handleImageError = (imageElement) => {
+                imageElement.src = PLACEHOLDER_IMAGE;
+                imageElement.onerror = null;
+            };
+
+            // --- NEW: PRODUCT DETAIL MODAL ---
+            window.viewDetails = (productId) => {
+                const product = allProducts.find(p => p.id === productId);
+                if (!product) return;
+                
+                const productName = product.name || "Product Details";
+                const productImage = product.image || PLACEHOLDER_IMAGE;
+                const currentPrice = parseFloat(product.currentPrice) || 0;
+                const originalPrice = parseFloat(product.originalPrice) || 0;
+                const description = product.description || 'No detailed description available for this product.';
+                const buttonUrl = product.buttonUrl || '#';
+
+                // MODIFIED: MRP/Original Price को वापस लाया गया + "M.R.P." को "Price" किया गया
+                let priceHtml = '';
+                let discount = 0;
+                if (originalPrice > currentPrice) {
+                    discount = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
                 }
+                
+                priceHtml = `
+                    ${originalPrice > currentPrice ? `<div class="mrp">Price: <span>${formatCurrency(originalPrice)}</span></div>` : ''}
+                    <div class="deal-price-row">
+                        <span>${originalPrice > currentPrice ? 'Deal Price:' : 'Price:'}</span>
+                        <span class="deal-price">${formatCurrency(currentPrice)}</span>
+                        ${discount > 0 ? `<div class="discount-badge">${discount}% OFF</div>` : ''}
+                    </div>
+                `;
+                
+                let relatedProductsHtml = '';
+                if (product.category) {
+                    // Find related products (same category, not same ID)
+                    const relatedProducts = allProducts.filter(p => p.id !== productId && p.category === product.category).slice(0, 6);
+                    if (relatedProducts.length > 0) {
+                        let relatedCards = '';
+                        relatedProducts.forEach(relProd => {
+                            // === MODIFICATION START: Use full product card HTML ===
+                            const currentPrice = parseFloat(relProd.currentPrice) || 0;
+                            const originalPrice = parseFloat(relProd.originalPrice) || 0;
+                            const discount = originalPrice > currentPrice ? Math.round(((originalPrice - currentPrice) / originalPrice) * 100) : 0;
+                            
+                            relatedCards += `
+                                <div class="product-card" data-product-id="${relProd.id}">
+                                    <div class="product-image-wrapper" onclick="viewDetails('${relProd.id}')">
+                                        <img src="${relProd.image || PLACEHOLDER_IMAGE}" alt="${relProd.name || 'Product'}" class="product-image" loading="lazy" onerror="window.handleImageError(this)">
+                                    </div>
+                                    <div class="product-card-content">
+                                        <a href="#" class="product-name" onclick="event.preventDefault(); viewDetails('${relProd.id}')">${relProd.name || 'Unnamed Product'}</a>
+                                        <div class="product-pricing">
+                                            <span class="current-price">${formatCurrency(currentPrice)}</span>
+                                            ${originalPrice > currentPrice ? `<span class="original-price">${formatCurrency(originalPrice)}</span>` : ''}
+                                            ${discount > 0 ? `<div class="discount-badge">${discount}% OFF</div>` : ''}
+                                        </div>
+                                        <div class="product-actions">
+                                            <button class="action-button detail-button" onclick="viewDetails('${relProd.id}')">Details</button>
+                                            <button class="action-button buy-button icon-button" onclick="handleBuyNow(event, '${relProd.buttonUrl || '#'}')">
+                                                <svg viewBox="0 0 24 24" style="width:22px; height:22px; fill:var(--amazon-text-dark);">
+                                                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            // === MODIFICATION END ===
+                        });
 
-                const pageData = pageContents[pageKey];
-                const content = pageData && pageData.content ? pageData.content.replace(/\n/g, '<br>') : '<p>Content not available.</p>';
-                showPageModal(`${icon}<span>${anchor.innerText}</span>`, content);
-            }
-        });
-
-        modalCloseBtn.addEventListener('click', hidePageModal);
-        pageModal.addEventListener('click', (e) => { if (e.target === pageModal) hidePageModal(); });
-
-        let currentSlide = 0, sliderData = [], sliderInterval, isSliderPaused = false;
-        function initSlider(slides) {
-            sliderData = slides; sliderWrapper.innerHTML = ''; sliderDots.innerHTML = '';
-            if (!slides || slides.length === 0) { sliderWrapper.innerHTML = `<div class="slide"><div class="loading"><div class="loading-spinner"></div></div></div>`; return; }
-            slides.forEach((slide, index) => {
-                const slideEl = document.createElement('div'); slideEl.className = 'slide';
-                slideEl.innerHTML = `<img src="${slide.image}" alt="Special Offer ${index + 1}" onerror="handleImageError(this)">`;
-                slideEl.onclick = () => { if (slide.url) window.open(slide.url, '_blank', 'noopener'); };
-                sliderWrapper.appendChild(slideEl);
-                const dot = document.createElement('div'); dot.className = `dot ${index === 0 ? 'active' : ''}`;
-                dot.onclick = () => goToSlide(index); sliderDots.appendChild(dot);
-            });
-            startAutoSlide();
-        }
-        function goToSlide(index) { currentSlide = index; sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide)); }
-        function nextSlide() { if (!isSliderPaused && sliderData.length > 0) { currentSlide = (currentSlide + 1) % sliderData.length; goToSlide(currentSlide); } }
-        
-        function startAutoSlide() { if (sliderInterval) clearInterval(sliderInterval); if (sliderData.length > 1) { sliderInterval = setInterval(nextSlide, 5000); } }
-        document.querySelector('.slider')?.addEventListener('mouseenter', () => isSliderPaused = true);
-        document.querySelector('.slider')?.addEventListener('mouseleave', () => isSliderPaused = false);
-        
-        const localStorageFavsKey = 'dealsHubFavoritesAnonymous';
-        function getFavorites() { 
-            try { 
-                const f = localStorage.getItem(localStorageFavsKey); 
-                return f ? JSON.parse(f) : []; 
-            } catch (e) { 
-                console.error("Error reading favorites:", e);
-                return []; 
-            } 
-        }
-        function saveFavorites(favorites) { 
-            try { 
-                localStorage.setItem(localStorageFavsKey, JSON.stringify(favorites)); 
-                updateFavCount();
-            } catch (e) { 
-                console.error("Error saving favorites:", e); 
-            } 
-        }
-
-        function updateFavCount() {
-            const favorites = getFavorites();
-            const count = favorites.length;
-            if (count > 0) {
-                favsItemCount.textContent = count;
-                favsItemCount.style.display = 'block';
-            } else {
-                favsItemCount.style.display = 'none';
-            }
-        }
-
-        function toggleFavorite(productId) {
-            let favorites = getFavorites();
-            const index = favorites.indexOf(productId);
-            let isLiked = (index > -1);
-
-            if (isLiked) { favorites.splice(index, 1); } else { favorites.push(productId); }
-            
-            saveFavorites(favorites);
-            
-            const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
-            if (productCard) {
-                const favToggleBtn = productCard.querySelector('.favorite-toggle');
-                if (favToggleBtn) {
-                    favToggleBtn.classList.toggle('liked', !isLiked);
-                    favToggleBtn.setAttribute('aria-label', !isLiked ? 'Remove from favorites' : 'Add to favorites');
-                }
-            }
-            
-            if(pageModal.classList.contains('show') && modalTitle.innerText.includes('MY FAVOURITES')) { renderFavoritesModal(); }
-        }
-        
-        function renderFavoritesModal() {
-            const favorites = getFavorites();
-            const favProducts = allProducts.filter(p => favorites.includes(p.id)); 
-            
-            const favsTitle = 'My Favourites';
-            const favsIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 0 1 7.5 3c1.74 0 3.41.81 4.5 2.09A5.4 5.4 0 0 1 16.5 3c3.07 0 5.5 2.43 5.5 5.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
-            
-            let content = '';
-            if (favProducts.length === 0) {
-                content = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M15.5,14h-.79l-.28-.27a6.5,6.5,0,1,0-1.07,1.07l.27,.28v.79l5,5L20.49,19l-5-5Zm-6,0A4.5,4.5,0,1,1,14,9.5,4.49,4.49,0,0,1,9.5,14Z"></path></svg><h3>No Favourites Saved</h3><p>Start liking products to see them here!</p></div>`;
-            } else {
-                content = `<div style="display: flex; flex-direction: column; gap: 15px;">`;
-                favProducts.forEach(product => {
-                    const discount = product.originalPrice && product.currentPrice < product.originalPrice ? Math.round(((product.originalPrice - product.currentPrice) / product.originalPrice) * 100) : 0;
-                    
-                    const stars = generateStars(product.rating, 16);
-
-                     content += `
-                        <div class="product-card" style="display: flex; flex-direction: row; align-items: center; padding: 15px; border: 2px solid var(--border-color); position: relative; gap: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transform: none;">
-                            <button class="favorite-toggle liked" onclick="toggleFavorite('${product.id}')" aria-label="Remove from favorites" style="top: 10px; right: 10px; background: none !important; box-shadow: none !important; border: 1px solid var(--border-color);">
-                                <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: #e74c3c; cursor: pointer; stroke: #e74c3c; stroke-width: 1;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 0 1 7.5 3c1.74 0 3.41.81 4.5 2.09A5.4 5.4 0 0 1 16.5 3c3.07 0 5.5 2.43 5.5 5.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                            </button>
-                            <div class="product-image-wrapper" style="flex-shrink: 0; width: 100px; height: 100px; margin-bottom: 0; border-radius: 10px; background: #ffffff;">
-                                <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" style="padding: 0px;" onerror="handleImageError(this)">
+                        relatedProductsHtml = `
+                            <div class="related-products-section">
+                                <h4>Related Deals</h4>
+                                <div class="products-grid">${relatedCards}</div>
                             </div>
-                            <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left;">
-                                <div style="font-size: 16px; font-weight: 700; color: var(--text-color); margin-bottom: 5px;">${product.name}</div>
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; justify-content: flex-start;">
-                                    <span class="current-price" style="font-size: 20px; color: var(--buy-button-color); margin-right: 0;">₹${product.currentPrice.toLocaleString('en-IN')}</span>
-                                    ${product.originalPrice && product.currentPrice < product.originalPrice ? `<span class="original-price" style="font-size: 14px;">₹${product.originalPrice.toLocaleString('en-IN')}</span>` : ''}
-                                    ${discount > 0 ? `<span class="discount-badge" style="margin-left: 5px; font-size: 12px; padding: 3px 6px;">${discount}% OFF</span>` : ''}
-                                </div>
-                                ${stars ? `<div class="product-rating" style="justify-content: flex-start; margin-bottom: 0;"><div class="stars">${stars}</div><span class="rating-value" style="font-size: 12px;">${parseFloat(product.rating).toFixed(1)}</span></div>` : ''}
-                                <div class="product-actions" style="margin-top: 10px; width: 100%; max-width: 250px; justify-content: flex-start; gap: 8px;">
-                                    <button class="detail-button" style="width: 50%; padding: 8px 10px; font-size: 14px;" onclick="viewDetails('${product.id}')">Details</button>
-                                    <button class="product-button" style="width: 50%; padding: 8px 10px; font-size: 14px; margin-bottom: 0;" onclick="handleBuyNow('${product.buttonUrl}')">View Deal</button>
-                                </div>
+                        `;
+                    }
+                }
+
+                // लेआउट आपकी ज़रूरतों के हिसाब से
+                const content = `
+                    <div class="product-detail-main">
+                        <div class="product-detail-image-container">
+                            <img src="${productImage}" alt="${productName}" onerror="window.handleImageError(this)">
+                        </div>
+                        <div class="product-detail-info">
+                            <h3>${productName}</h3>
+                            <div class="product-detail-pricing-box">${priceHtml}</div>
+                            
+                            <div class="product-detail-actions">
+                                <button class="action-button buy-button" onclick="handleBuyNow(null, '${buttonUrl}')">Shop Now</button>
+                            </div>
+                            
+                            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+                            
+                            <div class="product-detail-description">
+                                <h4>About This Item</h4>
+                                <p>${description}</p>
+                            </div>
+                        </div>
+                    </div>
+                    ${relatedProductsHtml}
+                `;
+                
+                productDetailContent.innerHTML = content;
+                productDetailModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            };
+            
+            function hideProductDetailModal() {
+                productDetailModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+
+            // --- Sidebar & Page Modal Listeners ---
+            headerMenuToggle.addEventListener('click', (e) => { e.stopPropagation(); userSidebar.classList.toggle('show'); userSidebarOverlay.classList.toggle('active'); });
+            document.addEventListener('click', (e) => { if (userSidebar.classList.contains('show') && (e.target === userSidebarOverlay || !userSidebar.contains(e.target) && e.target !== headerMenuToggle && !headerMenuToggle.contains(e.target))) closeHeaderMenu(); });
+            modalCloseBtn.addEventListener('click', hidePageModal);
+            pageModal.addEventListener('click', (e) => { if (e.target === pageModal) hidePageModal(); });
+            productDetailCloseBtn.addEventListener('click', hideProductDetailModal);
+
+            // --- Slider Function ---
+            let sliderIntervals = {};
+            function initSlider(containerId, wrapperId, dotsId, slides) {
+                const sliderContainer = document.getElementById(containerId);
+                const sliderWrapper = document.getElementById(wrapperId);
+                const sliderDots = document.getElementById(dotsId);
+                if (!sliderContainer || !sliderWrapper || !sliderDots) return;
+                // MODIFIED: Logic to hide slider if no slides
+                if (!slides || slides.length === 0) { 
+                    sliderContainer.style.display = 'none'; 
+                    return; 
+                }
+                sliderContainer.style.display = 'block';
+                let currentSlide = 0;
+                sliderWrapper.innerHTML = ''; sliderDots.innerHTML = '';
+                slides.forEach((slide, index) => {
+                    const slideEl = document.createElement('div');
+                    slideEl.className = 'slide';
+                    slideEl.innerHTML = `<img src="${slide.image || PLACEHOLDER_IMAGE}" alt="Offer ${index + 1}" onerror="window.handleImageError(this)">`;
+                    slideEl.onclick = () => { if (slide.url) window.open(slide.url, '_blank', 'noopener'); };
+                    sliderWrapper.appendChild(slideEl);
+                    const dot = document.createElement('div');
+                    dot.className = `dot ${index === 0 ? 'active' : ''}`;
+                    dot.onclick = () => goToSlide(index);
+                    sliderDots.appendChild(dot);
+                });
+                function goToSlide(index) {
+                    currentSlide = index;
+                    sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+                    sliderDots.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+                }
+                function nextSlide() { currentSlide = (currentSlide + 1) % slides.length; goToSlide(currentSlide); }
+                function startAutoSlide() {
+                    if (sliderIntervals[containerId]) clearInterval(sliderIntervals[containerId]);
+                    if (slides.length > 1) sliderIntervals[containerId] = setInterval(nextSlide, 5000);
+                }
+                goToSlide(0); startAutoSlide();
+            }
+            
+            // --- Product Rendering ---
+            function renderProducts() {
+                const productsGrid = document.getElementById('productsGrid');
+                if (!productsGrid) return;
+                
+                // MODIFIED: Filtering logic based on currentPage
+                // 1. Get categories for the *current page*
+                let pageCategories = [];
+                if (currentPage.toLowerCase() === 'home') {
+                    // Home shows all products (unless filtered)
+                    pageCategories = allCategories.map(c => c.name);
+                } else {
+                    // Other pages show only their specific categories
+                    pageCategories = allCategories
+                        .filter(c => c.page && c.page.toLowerCase() === currentPage.toLowerCase())
+                        .map(c => c.name);
+                }
+
+                // 2. Filter allProducts
+                let filteredProducts = [...allProducts];
+
+                // 2a. Filter by Page (using the page's categories)
+                if (currentPage.toLowerCase() !== 'home') {
+                    filteredProducts = filteredProducts.filter(p => p.category && pageCategories.includes(p.category));
+                }
+                
+                // 2b. Filter by selected Category
+                if (currentCategory !== 'All') { 
+                    filteredProducts = filteredProducts.filter(p => p.category === currentCategory); 
+                }
+                
+                // 2c. Filter by Search
+                if (currentSearch) { 
+                    filteredProducts = filteredProducts.filter(p => (p.name || '').toLowerCase().includes(currentSearch.toLowerCase())); 
+                }
+                
+                // 3. Sort
+                switch (currentSort) {
+                    case 'price-asc': filteredProducts.sort((a, b) => (parseFloat(a.currentPrice) || 0) - (parseFloat(b.currentPrice) || 0)); break;
+                    case 'price-desc': filteredProducts.sort((a, b) => (parseFloat(b.currentPrice) || 0) - (parseFloat(a.currentPrice) || 0)); break;
+                    case 'name-asc': filteredProducts.sort((a, b) => (a.name || '').localeCompare(b.name || '')); break;
+                }
+                
+                // 4. Render
+                if (filteredProducts.length === 0) {
+                    productsGrid.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M15.5,14h-.79l-.28-.27a6.5,6.5,0,1,0-1.07,1.07l.27,.28v.79l5,5L20.49,19l-5-5Zm-6,0A4.5,4.5,0,1,1,14,9.5,4.49,4.49,0,0,1,9.5,14Z"></path></svg><h3>No Products Found</h3><p>Try adjusting your filters or search term.</p></div>`;
+                    return;
+                }
+                
+                productsGrid.innerHTML = '';
+                filteredProducts.forEach(product => {
+                    if (product.isDealOfTheDay) return;                        
+                    const currentPrice = parseFloat(product.currentPrice) || 0;
+                    const originalPrice = parseFloat(product.originalPrice) || 0;
+                    const discount = originalPrice > currentPrice ? Math.round(((originalPrice - currentPrice) / originalPrice) * 100) : 0;
+                    const card = document.createElement('div'); 
+                    card.className = 'product-card';
+                    card.setAttribute('data-product-id', product.id);
+                    card.innerHTML = `
+                        <div class="product-image-wrapper" onclick="viewDetails('${product.id}')">
+                            <img src="${product.image || PLACEHOLDER_IMAGE}" alt="${product.name || 'Product'}" class="product-image" loading="lazy" onerror="window.handleImageError(this)">
+                        </div>
+                        <div class="product-card-content">
+                            <a href="#" class="product-name" onclick="event.preventDefault(); viewDetails('${product.id}')">${product.name || 'Unnamed Product'}</a>
+                            <div class="product-pricing">
+                                <span class="current-price">${formatCurrency(currentPrice)}</span>
+                                ${originalPrice > currentPrice ? `<span class="original-price">${formatCurrency(originalPrice)}</span>` : ''}
+                                ${discount > 0 ? `<div class="discount-badge">${discount}% OFF</div>` : ''}
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-button detail-button" onclick="viewDetails('${product.id}')">Details</button>
+                                <button class="action-button buy-button icon-button" onclick="handleBuyNow(event, '${product.buttonUrl || '#'}')">
+                                    <svg viewBox="0 0 24 24" style="width:22px; height:22px; fill:var(--amazon-text-dark);">
+                                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                                    </svg>
+                                </button>
                             </div>
                         </div>`;
+                    productsGrid.appendChild(card);
                 });
-                content += `</div>`;
             }
-            showPageModal(`${favsIcon}<span>${favsTitle.toUpperCase()}</span>`, content);
-        }
-
-        favsButton.addEventListener('click', () => {
-            renderFavoritesModal();
-        });
-
-        function showCustomConfirm(message, onConfirmCallback) {
-            confirmMessage.textContent = message;
-            currentConfirmCallback = onConfirmCallback;
-            customConfirmOverlay.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function hideCustomConfirm() {
-            customConfirmOverlay.classList.remove('show');
-            document.body.style.overflow = 'auto';
-            currentConfirmCallback = null;
-        }
-
-        confirmCancelBtn.addEventListener('click', hideCustomConfirm);
-        confirmConfirmBtn.addEventListener('click', () => {
-            if (currentConfirmCallback) {
-                currentConfirmCallback();
-            }
-            hideCustomConfirm();
-        });
-        customConfirmOverlay.addEventListener('click', (e) => {
-            if (e.target === customConfirmOverlay) {
-                hideCustomConfirm();
-            }
-        });
-
-        function showCustomAlert(message, onOkCallback = null) {
-            alertMessage.textContent = message;
-            currentAlertCallback = onOkCallback;
-            customAlertOverlay.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function hideCustomAlert() {
-            customAlertOverlay.classList.remove('show');
-            document.body.style.overflow = 'auto';
-            if (currentAlertCallback) {
-                currentAlertCallback();
-            }
-            currentAlertCallback = null;
-        }
-
-        alertOkBtn.addEventListener('click', hideCustomAlert);
-        customAlertOverlay.addEventListener('click', (e) => {
-            if (e.target === customAlertOverlay) {
-                hideCustomAlert();
-            }
-        });
-        
-        function renderProducts() {
-            productsGrid.innerHTML = '';
-            let filteredProducts = [...allProducts];
-            const now = new Date();
-
-            filteredProducts = filteredProducts.filter(p => {
-                if (p.expiryDate) {
-                    let expiryDateTime = p.expiryDate;
-                    if (p.expiryTime) {
-                         expiryDateTime += `T${p.expiryTime}`;
-                    }
-                    return new Date(expiryDateTime) > now;
-                }
-                return true;
-            });
-
-            if (currentCategory !== 'All') { filteredProducts = filteredProducts.filter(p => p.category === currentCategory); }
-            if (currentSearch) { 
-                filteredProducts = filteredProducts.filter(p => 
-                    p.name.toLowerCase().includes(currentSearch.toLowerCase()) || 
-                    (p.category && p.category.toLowerCase().includes(currentSearch.toLowerCase()))
-                ); 
-            }
-            switch (currentSort) {
-                case 'price-asc': filteredProducts.sort((a, b) => a.currentPrice - b.currentPrice); break;
-                case 'price-desc': filteredProducts.sort((a, b) => b.currentPrice - a.currentPrice); break;
-                case 'name-asc': filteredProducts.sort((a, b) => a.name.localeCompare(b.name)); break;
-                case 'rating-desc': filteredProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0)); break;
-            }
-
-            if (filteredProducts.length === 0) {
-                productsGrid.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M15.5,14h-.79l-.28-.27a6.5,6.5,0,1,0-1.07,1.07l.27,.28v.79l5,5L20.49,19l-5-5Zm-6,0A4.5,4.5,0,1,1,14,9.5,4.49,4.49,0,0,1,9.5,14Z"></path></svg><h3>No Products Found</h3><p>Try adjusting your filters or search term.</p></div>`;
-                return;
-            }
-
-            const favorites = getFavorites();
             
-            filteredProducts.forEach(product => {
-                if (product.isDealOfTheDay) return;
+            // --- Buy Now & Share ---
+            window.handleBuyNow = (event, url) => {
+                if (event) event.stopPropagation();
+                if (!url || url === '#') return;
+                const loader = document.getElementById('buy-now-loader-overlay');
+                loader.classList.add('show');
+                setTimeout(() => {
+                    window.open(url, '_blank', 'noopener');
+                    loader.classList.remove('show');
+                }, 1500);
+            };
+
+            // --- Deal of the Day ---
+            function renderDealOfTheDay(dealProduct) {
+                const container = document.getElementById('dealOfTheDayContainer'); 
+                if (!container) return; container.innerHTML = '';
+                if (!dealProduct) return;
+
+                const currentPrice = parseFloat(dealProduct.currentPrice) || 0;
+                const originalPrice = parseFloat(dealProduct.originalPrice) || 0;
+                let priceHtml = '';
+                let discount = 0;
                 
-                const discount = product.originalPrice && product.currentPrice < product.currentPrice ? Math.round(((product.originalPrice - product.currentPrice) / product.originalPrice) * 100) : 0;
-                
-                const displayRating = product.rating || 0;
-                const stars = generateStars(displayRating);
-                
-                const isLiked = favorites.includes(product.id);
-                
-                const card = document.createElement('div'); 
-                card.className = 'product-card';
-                card.setAttribute('data-product-id', product.id);
-                card.innerHTML = `
-                    <button class="favorite-toggle ${isLiked ? 'liked' : ''}" onclick="toggleFavorite('${product.id}')" aria-label="${isLiked ? 'Remove from favorites' : 'Add to favorites'}">
-                        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5A5.4 5.4 0 0 1 7.5 3c1.74 0 3.41.81 4.5 2.09A5.4 5.4 0 0 1 16.5 3c3.07 0 5.5 2.43 5.5 5.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                    </button>
-                    <div class="product-image-wrapper"><img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy" onerror="handleImageError(this)"></div>
-                    <div class="product-pricing">
-                        <span class="current-price">₹${product.currentPrice.toLocaleString('en-IN')}</span>
-                        ${product.originalPrice && product.currentPrice < product.currentPrice ? `<span class="original-price">₹${product.originalPrice.toLocaleString('en-IN')}</span>` : ''}
-                        ${discount > 0 ? `<span class="discount-badge">${discount}% OFF</span>` : ''}
-                    </div>
-                    ${displayRating > 0 ? `<div class="product-rating"><div class="stars">${stars}</div><span class="rating-value">${displayRating.toFixed(1)}</span></div>` : '<div class="product-rating"><span class="rating-value">No ratings</span></div>'}
-                    <div class="product-actions">
-                        <button class="detail-button" onclick="viewDetails('${product.id}')">Details</button> 
-                        <button class="product-button" onclick="handleBuyNow('${product.buttonUrl}')">${product.buttonText || 'Buy now'}</button>
+                if (originalPrice > currentPrice) {
+                    discount = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+                }
+
+                priceHtml = `
+                    <div class="price-row">
+                        <span class="current-price">${formatCurrency(currentPrice)}</span>
+                        ${originalPrice > currentPrice ? `<span class="original-price">${formatCurrency(originalPrice)}</span>` : ''}
+                        ${discount > 0 ? `<div class="discount-badge">${discount}% OFF</div>` : ''}
                     </div>`;
-                productsGrid.appendChild(card);
-            });
-        }
-        
-        window.handleBuyNow = (url) => {
-            window.open(url, '_blank', 'noopener');
-        };
 
-        function populateCategorySelect(products) {
-            const categoriesRef = db.ref('categories');
-            categoriesRef.once('value', snapshot => {
-                let categories = ['All'];
-                if (snapshot.exists()) {
-                    categories = categories.concat(Object.values(snapshot.val()).map(c => c.name).sort());
-                } else {
-                    categories = categories.concat([...new Set(products.map(p => p.category).filter(Boolean))].sort());
-                }
-                
-                categorySelect.innerHTML = '';
-                categories.forEach(category => {
-                    const option = document.createElement('option');
-                    option.value = category;
-                    option.innerText = category === 'All' ? 'All Categories' : category;
-                    categorySelect.appendChild(option);
-                });
-                categorySelect.value = currentCategory = categories.includes(currentCategory) ? currentCategory : 'All';
-            });
-        }
-        
-        function renderDealOfTheDay(dealProduct) {
-            const container = document.getElementById('dealOfTheDayContainer'); container.innerHTML = '';
-            if (dealProduct) {
-                const now = new Date();
-                let isExpired = false;
-                let expiryMessage = '';
-
-                if (dealProduct.expiryDate) {
-                    let expiryDateTime = dealProduct.expiryDate;
-                    if (dealProduct.expiryTime) {
-                        expiryDateTime += `T${dealProduct.expiryTime}`;
-                    }
-                    const expiryDateObj = new Date(expiryDateTime);
-                    if (expiryDateObj < now) {
-                        isExpired = true;
-                        expiryMessage = 'EXPIRED';
-                    } else {
-                        const diff = expiryDateObj.getTime() - now.getTime();
-                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                        expiryMessage = `${days > 0 ? days + 'd ' : ''}${hours}h ${minutes}m LEFT`;
-                    }
-                }
-
-                const discount = dealProduct.originalPrice && dealProduct.currentPrice < dealProduct.originalPrice ? Math.round(((dealProduct.originalPrice - dealProduct.currentPrice) / dealProduct.originalPrice) * 100) : 0;
-                const categoryText = dealProduct.category ? dealProduct.category.toUpperCase() : 'SPECIAL PRODUCT';
                 container.innerHTML = `
-                    <div class="section-header">
-                        <div class="section-header-title-wrapper">
-                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
-                            <h2 class="section-title">Deal of the Day</h2>
-                        </div>
-                    </div>
-                    <div class="deal-of-the-day-card">
-                        <div class="deal-image-wrapper">
-                            <img src="${dealProduct.image}" alt="${dealProduct.name}" onerror="handleImageError(this)">
-                            <div style="position: absolute; top: 15px; left: 15px; background: var(--detail-button-color); color: white; padding: 5px 12px; border-radius: 8px; font-size: 14px; font-weight: 700; box-shadow: 0 2px 5px rgba(0,0,0,0.3); font-variant: small-caps;">🔥 TODAY'S DEAL</div>
-                            ${dealProduct.expiryDate ? `<div class="deal-expiry-badge" style="background:${isExpired ? 'grey' : '#FF5722'};">${expiryMessage}</div>` : ''}
+                    <h2 class="section-title">Deal of the Day</h2>
+                    <div class="deal-of-the-day-card" data-product-id="${dealProduct.id}">
+                        <div class="deal-badge">DEAL OF THE DAY</div>
+                        <div class="deal-image-wrapper" style="cursor: pointer;" onclick="viewDetails('${dealProduct.id}')">
+                            <img src="${dealProduct.image || PLACEHOLDER_IMAGE}" alt="${dealProduct.name || 'Deal'}" onerror="window.handleImageError(this)">
                         </div>
                         <div class="deal-info">
-                            <h3>${dealProduct.name}</h3>
-                            <p class="deal-category">${categoryText}</p> 
+                            <h3>${dealProduct.name || 'Special Deal'}</h3>
                             <p class="deal-description">${dealProduct.description || 'An unbeatable offer, just for today!'}</p>
-                            <div class="product-pricing">
-                               <span class="current-price">₹${dealProduct.currentPrice.toLocaleString('en-IN')}</span>
-                               ${dealProduct.originalPrice && dealProduct.currentPrice < dealProduct.originalPrice ? `<span class="original-price">₹${dealProduct.originalPrice.toLocaleString('en-IN')}</span>` : ''}
-                               ${discount > 0 ? `<span class="discount-badge">${discount}% OFF</span>` : ''}
-                            </div>
-                            <!-- NEW: Button container for equal-sized buttons -->
-                             <div class="deal-actions">
-                                <button class="btn detail-button" onclick="viewDetails('${dealProduct.id}')">Details</button>
-                                ${!isExpired ? `<button class="btn buy-button" onclick="handleBuyNow('${dealProduct.buttonUrl}')">Grab The Deal</button>` : `<button class="btn buy-button" style="background: grey; cursor: not-allowed;" disabled>Deal Expired</button>`}
+                            <div class="deal-pricing">${priceHtml}</div>
+                            <div class="deal-actions">
+                                <button class="action-button buy-button" onclick="handleBuyNow(event, '${dealProduct.buttonUrl || '#'}')">Grab The Deal</button>
+                                <button class="action-button detail-button" onclick="viewDetails('${dealProduct.id}')">Details</button>
                             </div>
                         </div>
                     </div>`;
             }
-        }
-        
-        let searchTimeout;
-        sortSelect.addEventListener('change', (e) => { currentSort = e.target.value; renderProducts(); });
-        categorySelect.addEventListener('change', (e) => { currentCategory = e.target.value; renderProducts(); });
-        searchInput.addEventListener('input', (e) => { 
-            clearTimeout(searchTimeout);
-            currentSearch = e.target.value; 
-            currentCategory = 'All'; 
-            categorySelect.value = 'All';
-            searchTimeout = setTimeout(() => { renderProducts(); }, 300);
-        });
-        clearSearchBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            currentSearch = '';
-            renderProducts();
-        });
+            
+            // --- NEW: Custom Filter Modal Logic ---
+            const sortOptions = [
+                { value: 'default', text: 'Sort by' },
+                { value: 'price-asc', text: 'Price: Low to High' },
+                { value: 'price-desc', text: 'Price: High to Low' },
+                { value: 'name-asc', text: 'Name: A to Z' }
+            ];
 
-        db.ref('slider').on('value', (snapshot) => { initSlider(snapshot.val() ? Object.values(snapshot.val()) : []); });
-        db.ref('pages').on('value', (snapshot) => { if (snapshot.val()) { pageContents = snapshot.val(); } });
-        db.ref('products').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (!data) {
-                productsGrid.innerHTML = `<div class="empty-state"><h3>No Products Available</h3><p>Our deals will be here soon!</p></div>`;
-                allProducts = [];
-                renderDealOfTheDay(null);
-                return;
+            function openCustomSelect(type) {
+                customSelectOptions.innerHTML = ''; // Clear previous options
+                let optionsList = [];
+                let currentSelection = '';
+
+                if (type === 'category') {
+                    customSelectTitle.textContent = 'Select Category';
+                    
+                    // MODIFIED: Filter categories based on currentPage
+                    let pageCategoriesList = [];
+                    if (currentPage.toLowerCase() === 'home' || !currentPage) {
+                        pageCategoriesList = allCategories;
+                    } else {
+                        pageCategoriesList = allCategories.filter(c => c.page && c.page.toLowerCase() === currentPage.toLowerCase());
+                    }
+
+                    // Add 'All' option
+                    optionsList = [{ name: 'All' }, ...pageCategoriesList];
+                    currentSelection = currentCategory;
+                    
+                    optionsList.forEach(cat => {
+                        if (!cat.name) return;
+                        const li = document.createElement('li');
+                        li.className = 'custom-select-option';
+                        li.innerHTML = `
+                            <label for="cat-${cat.name}">${cat.name}</label>
+                            <input type="radio" id="cat-${cat.name}" name="custom-select" value="${cat.name}" ${cat.name === currentSelection ? 'checked' : ''}>
+                        `;
+                        li.addEventListener('click', () => {
+                            currentCategory = cat.name;
+                            categorySelectText.textContent = cat.name;
+                            renderProducts();
+                            closeCustomSelect();
+                        });
+                        customSelectOptions.appendChild(li);
+                    });
+                    
+                } else if (type === 'sort') {
+                    customSelectTitle.textContent = 'Sort By';
+                    optionsList = sortOptions;
+                    currentSelection = currentSort;
+                    
+                    optionsList.forEach(opt => {
+                        const li = document.createElement('li');
+                        li.className = 'custom-select-option';
+                        li.innerHTML = `
+                            <label for="sort-${opt.value}">${opt.text}</label>
+                            <input type="radio" id="sort-${opt.value}" name="custom-select" value="${opt.value}" ${opt.value === currentSelection ? 'checked' : ''}>
+                        `;
+                        li.addEventListener('click', () => {
+                            currentSort = opt.value;
+                            sortSelectText.textContent = opt.text;
+                            renderProducts();
+                            closeCustomSelect();
+                        });
+                        customSelectOptions.appendChild(li);
+                    });
+                }
+                
+                customSelectModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeCustomSelect() {
+                customSelectModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
             }
             
-            const allData = Object.keys(data).map(key => ({ ...data[key], id: key }));
-            const dealOfTheDayProduct = allData.find(p => p.isDealOfTheDay);
+            // --- Event Listeners ---
+            function attachHomeEventListeners() {
+                categorySelectTrigger.addEventListener('click', () => openCustomSelect('category'));
+                sortSelectTrigger.addEventListener('click', () => openCustomSelect('sort'));
+                customSelectModal.addEventListener('click', (e) => {
+                    if (e.target === customSelectModal) closeCustomSelect();
+                });
+                
+                const searchInput = document.getElementById('searchInput');
+                const clearSearchBtn = document.getElementById('clearSearchBtn');
+                
+                let searchTimeout;
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => { 
+                        clearTimeout(searchTimeout);
+                        currentSearch = e.target.value; 
+                        if (clearSearchBtn) clearSearchBtn.style.display = e.target.value ? 'block' : 'none';
+                        searchTimeout = setTimeout(renderProducts, 300);
+                    });
+                    
+                    // MODIFIED: Added 'keyup' listener for 'Enter' key
+                    searchInput.addEventListener('keyup', (e) => {
+                        if (e.key === 'Enter') {
+                            clearTimeout(searchTimeout); // Cancel any pending timed search
+                            currentSearch = e.target.value; // Set the search term
+                            renderProducts(); // Render immediately
+                        }
+                    });
+                }
+                if (clearSearchBtn) {
+                    clearSearchBtn.addEventListener('click', () => {
+                        if (searchInput) searchInput.value = '';
+                        currentSearch = '';
+                        clearSearchBtn.style.display = 'none';
+                        renderProducts();
+                    });
+                }
+            }
+
+            // --- NEW: SPA Navigation Logic ---
+            function loadPageContent(pageName) {
+                // All nav links now just show the home content area
+                mainHomeContent.style.display = 'block';
+                mainPageContent.style.display = 'none';
+                
+                // MODIFIED: Logic changed to support pages
+                currentPage = pageName; // Set the current page
+                currentCategory = 'All'; // Reset category filter
+                categorySelectText.textContent = 'All Categories'; // Reset filter text
+                
+                // Reset search and sort
+                if(sortSelectText) sortSelectText.textContent = 'Sort by';
+                const searchInput = document.getElementById('searchInput');
+                if(searchInput) searchInput.value = '';
+                const clearSearchBtn = document.getElementById('clearSearchBtn');
+                if (clearSearchBtn) clearSearchBtn.style.display = 'none';
+                currentSearch = '';
+                currentSort = 'default';
+
+                // Load the correct slider for the page
+                const pageKey = pageName.toLowerCase();
+                const slides = allSliders[pageKey] ? Object.values(allSliders[pageKey]) : [];
+                initSlider('pageSliderContainer', 'pageSliderWrapper', 'pageSliderDots', slides);
+                
+                // Re-render products for the new page
+                renderProducts();
+                
+                // Update active class on nav links
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.toggle('active', link.dataset.page === pageName);
+                });
+                
+                closeHeaderMenu();
+                window.scrollTo(0, 0);
+            }
+
+            function attachNavigationListeners() {
+                // For Bottom Nav
+                document.querySelectorAll('.bottom-nav .nav-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const pageName = link.dataset.page;
+                        if (pageName) {
+                            loadPageContent(pageName);
+                        }
+                    });
+                });
+                // For Logo
+                document.querySelector('.logo').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loadPageContent('home'); // Always go home
+                });
+                
+                // Keep modal links as they are
+                document.getElementById('about-us-link').addEventListener('click', () => { showPageModal('About Us', 'This is the About Us page. Content will be updated soon.'); });
+                document.getElementById('privacy-policy-link').addEventListener('click', () => { showPageModal('Privacy Policy', 'This is the Privacy Policy page. Content will be updated soon.'); });
+                document.getElementById('affiliate-disclosure-link').addEventListener('click', () => { showPageModal('Affiliate Disclosure', 'This is the Affiliate Disclosure page. Content will be updated soon.'); });
+            }
             
-            allProducts = [...allData];
+            // --- App Initialization ---
+            function initializeApp() {
+                attachHomeEventListeners();
+                attachNavigationListeners(); // New SPA navigation
+                
+                // Load initial page (home)
+                loadPageContent('home'); 
+                
+                db.ref('products').on('value', snapshot => {
+                    const productsObj = snapshot.val();
+                    allProducts = productsObj ? Object.keys(productsObj).map(key => ({ ...productsObj[key], id: key })) : [];
+                    const dealOfTheDayProduct = allProducts.find(p => p.isDealOfTheDay === true);
+                    renderDealOfTheDay(dealProduct);
+                    renderProducts(); // Render products based on the initial state
+                }, error => {
+                    console.error("Firebase Read Failed: ", error);
+                    const productsGrid = document.getElementById('productsGrid');
+                    if(productsGrid) productsGrid.innerHTML = `<div class="empty-state"><h3>Could not load products</h3></div>`;
+                });
+                
+                // MODIFIED: Load all sliders
+                db.ref('sliders').on('value', snapshot => {
+                    allSliders = snapshot.val() || {};
+                    // Load slider for the *initial* page ('home')
+                    const homeSlides = allSliders['home'] ? Object.values(allSliders['home']) : [];
+                    initSlider('pageSliderContainer', 'pageSliderWrapper', 'pageSliderDots', homeSlides);
+                });
+                
+                db.ref('categories').on('value', snapshot => {
+                    const categoriesObj = snapshot.val();
+                    // Assumes new structure { key: { name: '...', page: '...' } }
+                    allCategories = categoriesObj ? Object.values(categoriesObj).sort((a,b) => (a.name || '').localeCompare(b.name || '')) : [];
+                    // Re-render products in case categories loaded after products
+                    renderProducts();
+                });
+            }
 
-            renderDealOfTheDay(dealOfTheDayProduct);
-            populateCategorySelect(allData.filter(p => !p.isDealOfTheDay)); 
-            renderProducts();
+            initializeApp();
         });
-
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').then(reg => {
-                console.log('Service Worker registered: ', reg);
-            }).catch(err => {
-                console.error('Service Worker registration failed: ', err);
-            });
-        });
-    }
-
-    updateFavCount();
     </script>
 </body>
-  </html>
+</html>
